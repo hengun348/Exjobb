@@ -1,4 +1,3 @@
-
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
@@ -26,16 +25,6 @@ public class Jump : MonoBehaviour {
 		
 		// Move the controller
 		controller.Move(moveDirection * Time.deltaTime);
-<<<<<<< HEAD
-	 	//riajklrj
-=======
-	 	//riajklrjggggggggggggggggggggggggggggggtttttttttt
-	}
-	
-	void Temp()
-	{
-		
->>>>>>> 140e762890c690a0df467f7db6ddf3074bcfca48
 	}
 	
 	void Execute()
