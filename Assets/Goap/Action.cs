@@ -21,4 +21,8 @@ public class Action : MonoBehaviour {
 		this.cost = cost;
 	}
 	
+	public void gT(){
+		
+	}
+	
 }
