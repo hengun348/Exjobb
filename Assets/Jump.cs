@@ -29,7 +29,7 @@ public class Jump : MonoBehaviour {
 <<<<<<< HEAD
 
 		//ssssdfdf
-
+		//FFFF
 		//dddrdgf
 =======
 		//ssssdfdfererer
