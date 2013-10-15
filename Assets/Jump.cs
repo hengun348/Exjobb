@@ -26,7 +26,12 @@ public class Jump : MonoBehaviour {
 		
 		// Move the controller
 		controller.Move(moveDirection * Time.deltaTime);
-	 	//riajklrjgggggggggggggggggggggggggggggggg
+	 	//riajklrjggggggggggggggggggggggggggggggtttttttttt
+	}
+	
+	void Temp()
+	{
+		
 	}
 	
 	void Execute()
