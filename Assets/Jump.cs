@@ -29,9 +29,9 @@ public class Jump : MonoBehaviour {
 		//hahah
 	}
 	
-	void bajs()
+	void bajs2()
 	{
-		
+		//funka nu rå!!!
 	}
 	
 	void Execute()
