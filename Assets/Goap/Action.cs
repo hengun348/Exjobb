@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -19,10 +19,6 @@ public class Action : MonoBehaviour {
 	
 	public void setCost (float cost) {
 		this.cost = cost;
-	}
-	
-	public void gT(){
-		
 	}
 	
 }

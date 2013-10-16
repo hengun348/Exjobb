@@ -25,14 +25,8 @@ public class Jump : MonoBehaviour {
 		
 		// Move the controller
 		controller.Move(moveDirection * Time.deltaTime);
-	}
-	
-
-	void hej2(){
 		
-	}
-	void potatis()
-	{
+		//hahah
 	}
 	
 	void bajs()
