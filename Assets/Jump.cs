@@ -35,6 +35,11 @@ public class Jump : MonoBehaviour {
 	{
 	}
 	
+	void bajs()
+	{
+		
+	}
+	
 	void Execute()
 	{
 		
