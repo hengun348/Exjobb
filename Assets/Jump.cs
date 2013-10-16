@@ -34,6 +34,11 @@ public class Jump : MonoBehaviour {
 		//funka nu rå!!!
 	}
 	
+	void hej(){
+		
+		
+	}
+	
 	void Execute()
 	{
 		
