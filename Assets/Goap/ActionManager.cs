@@ -5,8 +5,63 @@ using System.Collections.Generic;
 public class ActionManager {
 	
 	public List<Action> actionsList;
-	public Dictionary<string, Action> actionsSuitableForGoal;
-
+	private Dictionary<Action, string> actionsSuitableForGoal;
+	private static ActionManager instance;
+	
+	private ActionManager()
+	{
+		
+		//All possible actions
+		actionsList.Add(new walkAction());
+		actionsList.Add(new jumpAction());
+		
+		//What actions will result in desired state?
+		actionsSuitableForGoal.Add(new jumpAction(), "hasJumped");
+		actionsSuitableForGoal.Add(new jumpHigherAction(), "hasJumped");
+		actionsSuitableForGoal.Add(new walkAction(), "reachedDestination");
+		
+	}
+	
+	public static ActionManager Instance
+	{
+		
+		get
+		{
+			
+			if(instance == null)
+			{
+				
+				instance = new ActionManager();
+				
+			}
+			return instance;
+			
+		}
+		
+	}
+	
+	public List<Action> getSuitableActions(string goal)
+	{
+		
+		//return the list with actions suitable for a certain goal
+		List<Action> actionList = new List<Action>();
+		/*
+		foreach(KeyValuePair action in actionsSuitableForGoal)
+		{
+			
+			if(action.value == goal)
+			{
+				
+				actionList.Add(Action.key);
+				
+			}
+			
+		}*/
+				
+		return actionList;
+		
+	}
+	
 	/*public void addAction(Action action)
 	{
 		actionsList.Add(action);
@@ -22,18 +77,5 @@ public class ActionManager {
 		return actionsList.FindAll(s => s.Equals(name));
 	}
 	*/
-	public ActionManager()
-	{
-		
-		//All possible actions
-		actionsList.Add(new walkAction());
-		actionsList.Add(new jumpAction());
-		
-		//What actions will result in desired state?
-		actionsSuitableForGoal.Add("needToJump", jump);
-		actionsSuitableForGoal.Add("needToJump", jumpHigher);
-		actionsSuitableForGoal.Add("reachedDestination", walk);
-		
-	}
 	
 }

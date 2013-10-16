@@ -4,20 +4,16 @@ using System.Collections.Generic;
 
 public class Action {
 	
-	public WorldState preConditions;
-	public WorldState postConditions;
-	public float cost;
+	protected WorldState preConditions;
+	protected WorldState postConditions;
+	protected float cost;
+	protected List<string> agentType;
 	
-	/*public void setPreCondition (WorldState condition) {
-		preConditions.Add(condition);
+	public List<string> getAgentType()
+	{
+		
+		return agentType;
+		
 	}
-	
-	public void setPostCondition (WorldState condition) {
-		postConditions.Add(condition);
-	}
-	
-	public void setCost (float cost) {
-		this.cost = cost;
-	}
-	*/
+
 }

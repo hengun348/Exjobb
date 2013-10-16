@@ -8,10 +8,12 @@ public class WorldStateProperty {
 	
 	public WorldStateValue propertyValue;
 	
-	public void setProperty(string name, WorldStateValue stateValue)
+	public WorldStateProperty(string name, WorldStateValue stateValue)
 	{
+		
 		propertyName = name;
 		propertyValue = stateValue;
+		
 	}
 	
 }

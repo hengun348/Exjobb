@@ -9,12 +9,14 @@ public class walkAction : Action {
 	{
 		
 		this.preConditions = new WorldState();
-		this.preConditions.setProperty("hasDestination", new WorldStateValue<bool>(true));
+		this.preConditions.setProperty("hasDestination", new WorldStateValue(true));
 		
 		this.postConditions = new WorldState();
-		this.postConditions.setProperty("reachedDestination", new WorldStateValue<bool>(true));
+		this.postConditions.setProperty("reachedDestination", new WorldStateValue(5));
 		
 		this.cost = 4.0f;
+		
+		this.agentType.Add("normal");
 		
 	}
 	

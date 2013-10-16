@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class WorldState {
 	
+	
+	//TODO: kontrollera hur worldstate igentligen ska vara uppbyggt(se setProperty tex)
 	public Dictionary<string, WorldStateProperty> properties;
 	
 	public Dictionary<string, WorldStateProperty> getProperties()
@@ -11,9 +13,10 @@ public class WorldState {
 		return properties;
 	}
 	
-	public void setProperty(string name, WorldStateProperty property)
+	public void setProperty(string name, WorldStateValue stateValue)
 	{
-		properties.Add(name, property);
+		
+		properties.Add(name, new WorldStateProperty(name, stateValue));
 	}
 	
 	public WorldStateProperty getProperty(string name)

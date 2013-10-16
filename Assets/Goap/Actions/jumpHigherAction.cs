@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class jumpAction : Action {
+public class jumpHigherAction : Action {
 	
-	public jumpAction()
+	public jumpHigherAction()
 	{
 		
 		this.preConditions = new WorldState();
@@ -14,7 +14,7 @@ public class jumpAction : Action {
 		this.postConditions = new WorldState();
 		this.postConditions.setProperty("hasJumped", new WorldStateValue(true));
 		
-		this.cost = 4.0f;
+		this.cost = 8.0f;
 		
 		this.agentType.Add("normal");
 		

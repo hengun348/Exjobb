@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using Action;
 
 public class Jump : MonoBehaviour {
 	
@@ -18,6 +17,7 @@ public class Jump : MonoBehaviour {
 	
 	void Update()
 	{
+		
 		controller = GetComponent<CharacterController>();
 		moveDirection = new Vector3(0,jumpHeight,0);
 		
@@ -26,6 +26,7 @@ public class Jump : MonoBehaviour {
 		
 		// Move the controller
 		controller.Move(moveDirection * Time.deltaTime);
+		
 	}
 	
 }
