@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AStarNode : MonoBehaviour {
+public class AStarNode {
 	
 	public float h;
 	public float g;

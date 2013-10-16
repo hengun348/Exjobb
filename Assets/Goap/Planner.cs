@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Planner : MonoBehaviour{
+public class Planner{
 	
-	public WorldStateProperty currentWorldState;
-	public WorldStateProperty goalWorldState;
+	//public WorldState currentWorldState;
+	public WorldState goalWorldState;
 	public List<Action> plan;
 	
 	void Start(){

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BlackBoard : MonoBehaviour {
+public class BlackBoard {
 	
 	public void setWalkTarget()
 	{
@@ -14,14 +14,5 @@ public class BlackBoard : MonoBehaviour {
 		//anropa en class som kan returnera nuvarande mål	
 		return "haha";
 	}
-	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }

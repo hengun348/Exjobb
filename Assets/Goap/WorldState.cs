@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class WorldState : MonoBehaviour {
+public class WorldState {
 	
 	public Dictionary<string, WorldStateProperty> properties;
 	
@@ -26,13 +26,4 @@ public class WorldState : MonoBehaviour {
 		properties.Remove(name);
 	}
 	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
 }

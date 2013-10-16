@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class WorldStateProperty : MonoBehaviour {
+public class WorldStateProperty {
 	
 	public string propertyName;
 	

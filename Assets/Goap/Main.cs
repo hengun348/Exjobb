@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Main : MonoBehaviour{
+public class Main {
 	
 	void Start(){
 		

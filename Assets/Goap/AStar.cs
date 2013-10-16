@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class AStar : MonoBehaviour {
+public class AStar {
 	
 	public List<AStarNode> openList;
 	public List<AStarNode> closedList;

@@ -2,17 +2,8 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class WorldStateValue : MonoBehaviour {
+public class WorldStateValue {
 	
 	public Object propertyValue;
-	
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
 }
