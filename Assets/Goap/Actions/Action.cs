@@ -6,13 +6,14 @@ public class Action {
 	
 	protected WorldState preConditions;
 	protected WorldState postConditions;
-	protected float cost;
-	protected List<string> agentType;
+	public float cost;
+	public string actionName;
+	protected List<string> agentTypes;
 	
-	public List<string> getAgentType()
+	public List<string> getAgentTypes()
 	{
 		
-		return agentType;
+		return agentTypes;
 		
 	}
 

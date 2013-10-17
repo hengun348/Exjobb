@@ -8,16 +8,19 @@ public class jumpAction : Action {
 	public jumpAction()
 	{
 		
-		this.preConditions = new WorldState();
-		this.preConditions.setProperty("needToJump", new WorldStateValue(true));
+		preConditions = new WorldState();
+		preConditions.setProperty("needToJump", true);
 		
-		this.postConditions = new WorldState();
-		this.postConditions.setProperty("hasJumped", new WorldStateValue(true));
+		postConditions = new WorldState();
+		postConditions.setProperty("hasJumped", true);
 		
-		this.cost = 4.0f;
+		cost = 4.0f;
 		
-		this.agentType.Add("normal");
+		agentTypes = new List<string>();
+		agentTypes.Add("normal");
 		
+		this.actionName = "jumpAction";
+
 	}
 	
 }

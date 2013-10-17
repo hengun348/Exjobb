@@ -4,29 +4,43 @@ using System.Collections.Generic;
 
 public class WorldState {
 	
-	
 	//TODO: kontrollera hur worldstate igentligen ska vara uppbyggt(se setProperty tex)
-	public Dictionary<string, WorldStateProperty> properties;
 	
-	public Dictionary<string, WorldStateProperty> getProperties()
+	//string = propertyName, object = propertyValue
+	public Dictionary<string, object> properties; 
+	
+	public WorldState()
 	{
-		return properties;
+		properties = new Dictionary<string, object>();
 	}
 	
-	public void setProperty(string name, WorldStateValue stateValue)
+	public Dictionary<string, object> getProperties()
 	{
 		
-		properties.Add(name, new WorldStateProperty(name, stateValue));
+		return properties;
+		
 	}
 	
-	public WorldStateProperty getProperty(string name)
+	public void setProperty(string name, object stateValue)
 	{
+		
+		properties.Add(name, stateValue);
+		
+	}
+	
+	public object getValue(string name)
+	{
+		
+		//returns the value (an object)
 		return properties[name];
+		
 	}
 	
 	public void removeProperty(string name)
 	{
+		
 		properties.Remove(name);
+		
 	}
 	
 }

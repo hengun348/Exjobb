@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class normalAgent: Agent {
 	
+	public Planner planner;
+	
 	public normalAgent () 
 	{
 		this.agentType = "normal";
@@ -14,7 +16,7 @@ public class normalAgent: Agent {
 		{
 			
 			//if this agent can do the action, add to list
-			if(action.getAgentType().Contains(this.agentType))
+			if(action.getAgentTypes().Contains(this.agentType))
 			{
 				
 				availableActions.Add(action);
@@ -23,20 +25,16 @@ public class normalAgent: Agent {
 			
 		}
 		
-		
+		planner = new Planner();
 		
 		
 		
 		
 		
 	/*	wMemory = new WorkingMemory();
-		planner = new Planner();
+		
 		bBoard = new BlackBoard();
-		
-		
-		
-		//---------------Working memory
-		wMemory.setFact(WorldState.getProperties());
+
 	*/	
 	}
 	

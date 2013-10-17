@@ -2,11 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Main {
+public class Main: MonoBehaviour {
 	
 	void Start(){
-		
-		//funka då!
+		normalAgent agent = new normalAgent();
 	}
 	
 }

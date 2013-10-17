@@ -12,10 +12,13 @@ public class ActionManager {
 	{
 		
 		//All possible actions
+		actionsList = new List<Action>();
 		actionsList.Add(new walkAction());
 		actionsList.Add(new jumpAction());
 		
+		
 		//What actions will result in desired state?
+		actionsSuitableForGoal = new Dictionary<Action, string>();
 		actionsSuitableForGoal.Add(new jumpAction(), "hasJumped");
 		actionsSuitableForGoal.Add(new jumpHigherAction(), "hasJumped");
 		actionsSuitableForGoal.Add(new walkAction(), "reachedDestination");
@@ -45,20 +48,39 @@ public class ActionManager {
 		
 		//return the list with actions suitable for a certain goal
 		List<Action> actionList = new List<Action>();
-		/*
-		foreach(KeyValuePair action in actionsSuitableForGoal)
+		
+		foreach(KeyValuePair<Action, string> pair in actionsSuitableForGoal)
 		{
 			
-			if(action.value == goal)
+			if(pair.Value == goal)
 			{
 				
-				actionList.Add(Action.key);
+				actionList.Add(pair.Key);
 				
 			}
 			
-		}*/
+		}
 				
 		return actionList;
+		
+	}
+	
+	public Action getAction(string name)
+	{
+		
+		foreach(Action action in actionsList)
+		{
+			
+			if (action.actionName == name)
+			{
+				
+				return action;
+				
+			}
+			
+		}
+		
+		return new Action();
 		
 	}
 	
