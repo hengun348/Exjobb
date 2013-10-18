@@ -15,12 +15,15 @@ public class ActionManager {
 		actionsList = new List<Action>();
 		actionsList.Add(new walkAction());
 		actionsList.Add(new jumpAction());
+		actionsList.Add(new jumpHigherAction());
+		actionsList.Add(new reloadAction());
 		
 		
 		//What actions will result in desired state?
 		actionsSuitableForGoal = new Dictionary<Action, string>();
 		actionsSuitableForGoal.Add(new jumpAction(), "hasJumped");
 		actionsSuitableForGoal.Add(new jumpHigherAction(), "hasJumped");
+		actionsSuitableForGoal.Add(new reloadAction(), "hasJumped");
 		actionsSuitableForGoal.Add(new walkAction(), "reachedDestination");
 		
 	}

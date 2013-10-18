@@ -17,16 +17,13 @@ public class AStar {
 	
 	public List<AStarNode> runAStar(AStarNode startNode, AStarNode endNode)
 	{
-		Debug.Log("startNode i astar: " + startNode);
-		Debug.Log("endNode i astar: " + endNode);
 		openList.Add(startNode);
-		pathList.Add(startNode);
+		//pathList.Add(startNode);
 		AStarNode currentNode = startNode;
 		
 		currentNode.g = 0.0f;
 		currentNode.h = 0.0f;
 		currentNode.f = 0.0f;
-		Debug.Log ("undersöker currentnode: " + currentNode);
 		while(openList.Count > 0)
 		{
 			int lowInd = 0;
@@ -36,12 +33,26 @@ public class AStar {
 				{ 
 					lowInd = i; 
 				}
+				Debug.Log ("lägsta index: " + lowInd);
 			}
 			currentNode = openList[lowInd];
  
-			if(currentNode == endNode)
+			Debug.Log("currentNode.name: " + currentNode.name);
+			Debug.Log("endNode.name: " + endNode.name);
+			Debug.Log(currentNode.action);
+			if(currentNode.action != null)
 			{
-				return pathList;
+				if(currentNode.action.containsPreCondition(endNode.name))
+				{
+					Debug.Log("Nu är vi i slutet1");
+					return pathList;
+				}
+			}else{
+				if(currentNode.name == endNode.name)
+				{
+					Debug.Log("Nu är vi i slutet2");
+					return pathList;
+				}
 			}
 			
 			openList.Remove(currentNode);
@@ -57,13 +68,14 @@ public class AStar {
 					//not a valid node
 					continue;
 				}
-				
-				Debug.Log("actionkostnad: " + currentNode.name);
+				Debug.Log ("antal grannar: " + neighbourList.Count);
+				Debug.Log("currentnode: " + currentNode.name);
 				float g_score = currentNode.g + 1.0f; //distance between nodes
 				bool gScoreIsBest = false;
 				
 				if(!openList.Contains(currentNeighbour) )
 				{
+					Debug.Log("kontroll om currentneighbour inte finns i openlist: " + !openList.Contains(currentNeighbour));
 					gScoreIsBest = true;
 					currentNeighbour.h = heuristic_cost(currentNeighbour, endNode);
 					openList.Add(currentNeighbour);
@@ -81,10 +93,11 @@ public class AStar {
 				}
 			}
 		}
+		Debug.Log ("det blev fel");
 		return new List<AStarNode>();
 	}
 	
-	public int heuristic_cost(AStarNode currentNeighbour, AStarNode endNode){
+	public float heuristic_cost(AStarNode currentNeighbour, AStarNode endNode){
 		
 		// See list of heuristics: http://theory.stanford.edu/~amitp/GameProgramming/Heuristics.html
  
@@ -93,7 +106,7 @@ public class AStar {
         /*var d1 = Math.abs (pos1.x - pos0.x);
         var d2 = Math.abs (pos1.y - pos0.y);
         return d1 + d2;*/
-		return Random.Range(1,5);
+		return currentNeighbour.action.cost;
 		
 	}
 	

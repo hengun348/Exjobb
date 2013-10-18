@@ -16,5 +16,23 @@ public class Action {
 		return agentTypes;
 		
 	}
+	
+	public bool containsPreCondition(string condition)
+	{
+		Dictionary<string, object> preConditionsList = preConditions.getProperties();	
+		
+		foreach(KeyValuePair<string, object> pair in preConditionsList)
+		{
+			
+			if(pair.Key == condition){
+			
+				return true;
+				
+			}
+			
+		}
+		
+		return false;
+	}
 
 }

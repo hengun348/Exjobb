@@ -27,6 +27,8 @@ public class AStarNode {
 			
 			AStarNode node = new AStarNode();
 			node.name = action.actionName;
+			node.action = action;
+			
 			suitableActions.Add(node);
 			
 		}
