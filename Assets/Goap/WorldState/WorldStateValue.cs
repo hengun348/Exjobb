@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class WorldStateValue {
 	
-	public object propertyValue;
+	public bool propertyValue;
 	
-	public WorldStateValue(object objValue)
+	public WorldStateValue(bool objValue)
 	{
 		
 		this.propertyValue = objValue;

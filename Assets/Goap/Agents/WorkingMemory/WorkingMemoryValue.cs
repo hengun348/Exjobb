@@ -4,6 +4,6 @@ using System.Collections.Generic;
 
 public class WorkingMemoryValue {
 	
-	public Object factValue;
+	public bool factValue;
 
 }

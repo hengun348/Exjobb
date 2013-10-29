@@ -2,40 +2,45 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class normalAgent: Agent {
+public class normalAgent: MonoBehaviour
+{
 	
+	public WorkingMemory wMemory;
 	public Planner planner;
+	public BlackBoard blackBoard;
+	List<AStarNode> plan;
+	List<Subsystem> subSystems;
 	
-	public normalAgent () 
-	{
-		this.agentType = "normal";
-		
-		availableActions = new List<Action>();
-		
-		foreach( Action action in ActionManager.Instance.actionsList )
-		{
-			
-			//if this agent can do the action, add to list
-			if(action.getAgentTypes().Contains(this.agentType))
-			{
-				
-				availableActions.Add(action);
-				
-			}
-			
-		}
-		
+	private string agentType { get; set; }
+	
+	void Start(){
+	
+		this.agentType = "normalAgent";
+		blackBoard = new BlackBoard();
 		planner = new Planner();
+		plan = planner.runAStar(this.agentType);
 		
 		
 		
-		
-		
-	/*	wMemory = new WorkingMemory();
-		
-		bBoard = new BlackBoard();
 
-	*/	
+	
+		subSystems = new List<Subsystem>();
+		
+		subSystems.Add(new WalkSubsystem(blackBoard));
+		subSystems.Add(new JumpSubsystem(blackBoard));
+		subSystems.Add(new ApproachSubsystem(blackBoard));
+		subSystems.Add(new DetonateBombSubsystem(blackBoard));
+		subSystems.Add(new ScoutSubsystem(blackBoard));
+	
+		
 	}
 	
+	void Update(){
+		
+		foreach (Subsystem sub in subSystems){
+			
+			//sub.Update();
+		}
+		
+	}
 }

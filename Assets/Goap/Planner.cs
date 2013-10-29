@@ -6,53 +6,57 @@ public class Planner{
 	
 	private WorldState currentWorldState;
 	private WorldState goalWorldState;
-	private List<Action> plan;
+	private List<AStarNode> plan;
+	private string currentAgent;
 	
-	public Planner(){
+	public List<AStarNode> runAStar(string agentType){
+		
+		currentAgent = agentType;
+		
 		
 		currentWorldState = new WorldState();
-		currentWorldState.setProperty("needToJump", true);
+		//currentWorldState.setProperty("enemyVisible", false);
+		currentWorldState.setProperty("armedWithGun", true);
+		/*currentWorldState.setProperty("weaponLoaded", false);
+		currentWorldState.setProperty("enemyLinedUp", false);*/
+		currentWorldState.setProperty("enemyAlive", true);
+		currentWorldState.setProperty("armedWithBomb", false);
+		//currentWorldState.setProperty("nearEnemy", false);
+		currentWorldState.setProperty("agentAlive", true);
+		
 		goalWorldState = new WorldState();
-		goalWorldState.setProperty("hasJumped", true);
+		goalWorldState.setProperty("enemyAlive", false);
+		//goalWorldState.setProperty("agentAlive", true); //------ HADE GLÖMT DENNA HAHA! BUMMER!
 		
 		AStarNode startNode = new AStarNode();
 		AStarNode endNode = new AStarNode();
 		
-		//TODO: hur funkar det med flera mål?
-		foreach(KeyValuePair<string, object> pair in goalWorldState.properties)
-		{
-			
-			startNode.name = pair.Key;
-			
-		}
-		
-		foreach(KeyValuePair<string, object> pair in currentWorldState.properties)
-		{
-			
-			endNode.name = pair.Key;
-
-		}
+		startNode.worldState = goalWorldState;
+		endNode.worldState = currentWorldState;
 		
 		AStar star = new AStar();
 		
-		List<AStarNode> templist = new List<AStarNode>();
-		templist = star.runAStar(startNode, endNode);
-		Debug.Log("här är planen klar");
-		plan = new List<Action>();
-		foreach(AStarNode node in templist)
-		{
-			Debug.Log(node.action.actionName);
-			Debug.Log(ActionManager.Instance.getAction(node.action.actionName).actionName);
-			//TODO: dubbelkolla att returnerande action faktiskt finns
-			plan.Add(ActionManager.Instance.getAction(node.action.actionName));
-			
-		}
-		Debug.Log("här ska planen skrivas ut," + plan.Count);
-		foreach(Action action in plan)
-		{
-			Debug.Log(action.actionName);
-		}
+
+		ActionManager.Instance.currentAgent = currentAgent;
+		plan = star.runAStar(startNode, endNode);
 		
+		//används under utveklingsfasen
+		Debug.Log("HÄR ÄR PLANEN!!!!!!!!: " + plan.Count);
+		foreach(AStarNode node in plan)
+		{
+			Debug.Log(node.name);
+		}
+		//----------------------------
+		
+		/*foreach(AStarNode node in plan)
+		{
+			//TODO: dubbelkolla att returnerande action faktiskt finns
+			blackBoard.setCurrentAction(node.name);
+			
+		}*/
+		//blackBoard.setCurrentAction("");
+		
+		
+		return plan;
 	}
-	
 }

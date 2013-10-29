@@ -12,13 +12,14 @@ public class Jump : MonoBehaviour {
 	
 	void Start()
 	{
-		
+	controller = GetComponent<CharacterController>();
+		Debug.Log("controller: " + controller);
 	}
 	
 	void Update()
 	{
 		
-		controller = GetComponent<CharacterController>();
+		
 		moveDirection = new Vector3(0,jumpHeight,0);
 		
 		// Apply gravity
