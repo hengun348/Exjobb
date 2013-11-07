@@ -15,15 +15,16 @@ public class AStar {
 		pathList = new List<AStarNode>();
 	}
 	
-	public List<AStarNode> runAStar(AStarNode startNode, AStarNode endNode)
+	public List<AStarNode> run(AStarNode startNode, AStarNode endNode)
 	{
 		AStarNode currentNode = startNode;
-		
+		Debug.Log("ADFSDFSDSDF");
 		//Specialfall för första noden eftersom den INTE är något action utan en postCondition, räknar med att den aldrig kommer va mål!!!
 		List<AStarNode> neighbourList = currentNode.getNeighbours(true); //ger lista med actions som har startNodes preCondition 	
 		foreach(AStarNode node in neighbourList)
 		{
-			node.f = ActionManager.Instance.getAction(node.name).cost + 1.0f; //TODO: sätta slumptal istället för +1?
+			Debug.Log("AAAAAAAA : " + neighbourList.Count);
+			node.f = ActionManager.Instance.getAction(node.name).cost + heuristic_cost(node, endNode);
 			node.parent = startNode;
 			openList.Add(node); //Lägg till grannarna för start i openList
 		}
@@ -51,25 +52,51 @@ public class AStar {
 				return createPath(currentNode, startNode);
 			}
 			
-			if(ActionManager.Instance.getAction(currentNode.name).preConditions.getProperties().Count > 1)
+			bool containsPreWithAmount = false;
+			
+			if( ActionManager.Instance.getAction(currentNode.name).preConditions.getProperties().Count == 1){
+				foreach(KeyValuePair<string, WorldStateValue> pair in ActionManager.Instance.getAction(currentNode.name).preConditions.getProperties()){
+				
+						if((int)pair.Value.propertyValues["amount"] > 1){
+						
+							containsPreWithAmount = true;
+						}
+				
+				}
+			}
+				
+			//if multiple preconditions
+			if(ActionManager.Instance.getAction(currentNode.name).preConditions.getProperties().Count > 1 || containsPreWithAmount)
 			{
 				List<List<AStarNode>> lists = new List<List<AStarNode>>();
 				
-				foreach(KeyValuePair<string, bool> pair in ActionManager.Instance.getAction(currentNode.name).preConditions.getProperties())
+				foreach(KeyValuePair<string, WorldStateValue> pair in ActionManager.Instance.getAction(currentNode.name).preConditions.getProperties())
 				{
-					AStar astar2 = new AStar();
-					AStarNode tempNode = new AStarNode();
-					
-					WorldState tempWorldState = new WorldState();
-					tempWorldState.setProperty(pair.Key, pair.Value);
-					tempNode.worldState = tempWorldState;
-					
-					List<AStarNode> tempList = new List<AStarNode>();
-					tempList.AddRange(astar2.runAStar(tempNode, endNode));
-					
-					if(tempList.Count > 0)
+					Debug.Log("GDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" + pair.Value.propertyValues["amount"]);
+					for(int j = 0; j < (int)pair.Value.propertyValues["amount"]; j++)
 					{
-						lists.Add(tempList);
+						Debug.Log ("IIIIIIIIIIIIII: " + j);
+						AStar astar2 = new AStar();
+						AStarNode tempNode = new AStarNode();
+						
+						WorldState tempWorldState = new WorldState();
+						tempWorldState.setProperty(pair.Key, pair.Value);
+						tempNode.worldState = tempWorldState;
+						
+						List<AStarNode> tempList = new List<AStarNode>();
+						tempList.AddRange(astar2.run(tempNode, endNode));
+						
+						if(tempList.Count > 0)
+						{
+							lists.Add(tempList);
+						}
+						else 
+						{
+							if(!tempWorldState.contains(endNode.worldState))
+							{
+								return new List<AStarNode>();
+							}
+						}
 					}
 				}
 				
@@ -81,6 +108,7 @@ public class AStar {
 				}
 				return createPath(currentNode, startNode);
 			}
+			
 			
 			neighbourList = currentNode.getNeighbours(false);
 			Debug.Log ("antal grannar: " + neighbourList.Count);
@@ -97,9 +125,9 @@ public class AStar {
 				{
 					Debug.Log("namnet på grannen: " + currentNeighbour.name);
 					Debug.Log("kontroll om currentneighbour inte finns i openlist: " + !openList.Contains(currentNeighbour));
-					//gScoreIsBest = true;
+
 					currentNeighbour.h = heuristic_cost(currentNeighbour, endNode);
-					currentNeighbour.g = currentNode.g + 1.0f;
+					currentNeighbour.g = currentNode.g + currentNeighbour.time; 
 					currentNeighbour.f = currentNeighbour.g + currentNeighbour.h;
 					openList.Add(currentNeighbour);
 				}	
@@ -114,10 +142,13 @@ public class AStar {
         /*var d1 = Math.abs (pos1.x - pos0.x);
         var d2 = Math.abs (pos1.y - pos0.y);
         return d1 + d2;*/
-		return ActionManager.Instance.getAction(currentNeighbour.name).cost;
+		float cost = ActionManager.Instance.getAction(currentNeighbour.name).cost + Random.Range(-3, 3); //could it be dangerous to use negative values?
+		
+		return cost;
 	}
 	
 	public List<AStarNode> createPath(AStarNode currentNode, AStarNode endNode){
+		
 		while(!(ActionManager.Instance.getAction(currentNode.name).postConditions.contains(endNode.worldState)))
 		{
 			if(Object.ReferenceEquals(currentNode.parent.name, null)){

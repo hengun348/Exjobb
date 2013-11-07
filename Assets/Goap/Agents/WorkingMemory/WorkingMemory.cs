@@ -4,14 +4,25 @@ using System.Collections.Generic;
 
 public class WorkingMemory {
 	
-	public Dictionary<string, WorkingMemoryFact> knownFacts;
+	public Dictionary<string, WorkingMemoryValue> knownFacts;
 	
-	public void setFact(string name, WorkingMemoryFact factValue)
-	{
-		knownFacts.Add(name, factValue);
+	public WorkingMemory(){
+	
+		knownFacts = new Dictionary<string, WorkingMemoryValue>();
+		
 	}
 	
-	public WorkingMemoryFact getFact(string name)
+	public void setFact(string name, WorkingMemoryValue factValue)
+	{
+		if(!knownFacts.ContainsKey(name)){
+			knownFacts.Add(name, factValue);
+		} else {
+		
+			knownFacts[name] = factValue;
+		}
+	}
+	
+	public WorkingMemoryValue getFact(string name)
 	{
 		return knownFacts[name]; 
 	}

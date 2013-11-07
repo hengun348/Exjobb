@@ -4,6 +4,12 @@ using System.Collections.Generic;
 
 public class WorkingMemoryValue {
 	
-	public bool factValue;
+	public object factValue;
+	
+	public WorkingMemoryValue(object factValue){
+	
+		this.factValue = factValue;
+		
+	}
 
 }

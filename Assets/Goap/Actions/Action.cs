@@ -7,6 +7,7 @@ public class Action {
 	public WorldState preConditions;
 	public WorldState postConditions;
 	public float cost;
+	public float time {get; set; }
 	public string actionName;
 	protected List<string> agentTypes;
 	
@@ -17,25 +18,27 @@ public class Action {
 	
 	public bool containsPreCondition(string condition, bool val)
 	{
-		Dictionary<string, bool> preConditionsList = preConditions.getProperties();	
 		
-		foreach(KeyValuePair<string, bool> pair in preConditionsList)
+		Dictionary<string, WorldStateValue> preConditionsList = preConditions.getProperties();	
+		
+		foreach(KeyValuePair<string, WorldStateValue> pair in preConditionsList)
 		{
-			if(pair.Key == condition && pair.Value.Equals( val))
+			if(pair.Key == condition && pair.Value.propertyValues["bool"].Equals( val))
 			{
 				return true;
 			}
+			
 		}
 		return false;
 	}
 	
 	public bool containsPostCondition(string condition, bool val)
 	{
-		Dictionary<string, bool> postConditionsList = postConditions.getProperties();	
+		Dictionary<string, WorldStateValue> postConditionsList = postConditions.getProperties();	
 		
-		foreach(KeyValuePair<string, bool> pair in postConditionsList)
+		foreach(KeyValuePair<string, WorldStateValue> pair in postConditionsList)
 		{
-			if(pair.Key == condition && pair.Value.Equals( val))
+			if(pair.Key == condition && pair.Value.propertyValues["bool"].Equals( val))
 			{
 				return true;
 			}

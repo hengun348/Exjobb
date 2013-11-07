@@ -7,26 +7,26 @@ public class WorldState {
 	//TODO: kontrollera hur worldstate igentligen ska vara uppbyggt(se setProperty tex)
 	
 	//string = propertyName, bool = propertyValue
-	private Dictionary<string, bool> properties; 
+	private Dictionary<string, WorldStateValue> properties; 
 	
 	public WorldState()
 	{
-		properties = new Dictionary<string, bool>();
+		properties = new Dictionary<string, WorldStateValue>();
 	}
 	
-	public Dictionary<string, bool> getProperties()
+	public Dictionary<string, WorldStateValue> getProperties()
 	{
 		return properties;
 	}
 	
-	public void setProperty(string name, bool stateValue)
+	public void setProperty(string name, WorldStateValue stateValue)
 	{
 		properties.Add(name, stateValue);
 	}
 	
-	public bool getValue(string name)
+	public WorldStateValue getValue(string name)
 	{
-		//returns the value (an bool)
+		//returns the corresponding worldstatevalue
 		return properties[name];
 	}
 	
@@ -37,13 +37,14 @@ public class WorldState {
 	
 	public bool contains(WorldState ws)
 	{
-		Dictionary<string, bool> wsProperties = ws.getProperties();
+		Dictionary<string, WorldStateValue> wsProperties = ws.getProperties();
 		
-		foreach(KeyValuePair<string, bool> pair in properties)
+		foreach(KeyValuePair<string, WorldStateValue> pair in properties)
 		{
 			if(ws.getProperties().ContainsKey(pair.Key))
 			{
-				if(wsProperties[pair.Key].Equals(pair.Value))
+				
+				if(wsProperties[pair.Key].propertyValues["bool"].Equals(pair.Value.propertyValues["bool"]))
 				{
 					continue;
 				}

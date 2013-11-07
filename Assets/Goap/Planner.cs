@@ -4,29 +4,16 @@ using System.Collections.Generic;
 
 public class Planner{
 	
-	private WorldState currentWorldState;
-	private WorldState goalWorldState;
-	private List<AStarNode> plan;
-	private string currentAgent;
 	
-	public List<AStarNode> runAStar(string agentType){
+	public WorldState goalWorldState;
+	private List<AStarNode> plan;
+	//private string currentAgent;
+	
+	
+	public List<AStarNode> runAStar(WorldState currentWorldState){
 		
-		currentAgent = agentType;
 		
 		
-		currentWorldState = new WorldState();
-		//currentWorldState.setProperty("enemyVisible", false);
-		currentWorldState.setProperty("armedWithGun", true);
-		/*currentWorldState.setProperty("weaponLoaded", false);
-		currentWorldState.setProperty("enemyLinedUp", false);*/
-		currentWorldState.setProperty("enemyAlive", true);
-		currentWorldState.setProperty("armedWithBomb", false);
-		//currentWorldState.setProperty("nearEnemy", false);
-		currentWorldState.setProperty("agentAlive", true);
-		
-		goalWorldState = new WorldState();
-		goalWorldState.setProperty("enemyAlive", false);
-		//goalWorldState.setProperty("agentAlive", true); //------ HADE GLÖMT DENNA HAHA! BUMMER!
 		
 		AStarNode startNode = new AStarNode();
 		AStarNode endNode = new AStarNode();
@@ -37,10 +24,10 @@ public class Planner{
 		AStar star = new AStar();
 		
 
-		ActionManager.Instance.currentAgent = currentAgent;
-		plan = star.runAStar(startNode, endNode);
 		
-		//används under utveklingsfasen
+		plan = star.run(startNode, endNode);
+		
+		//används under utvecklingsfasen
 		Debug.Log("HÄR ÄR PLANEN!!!!!!!!: " + plan.Count);
 		foreach(AStarNode node in plan)
 		{

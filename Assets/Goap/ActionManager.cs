@@ -13,13 +13,17 @@ public class ActionManager {
 	{
 		//All possible actions
 		actionsList = new List<Action>();
-		actionsList.Add(new aimAction());
+		actionsList.Add(new AimAction());
 		actionsList.Add(new approachAction());
 		actionsList.Add(new detonateBombAction());
 		actionsList.Add(new fleeAction());
 		actionsList.Add(new loadAction());
 		actionsList.Add(new scoutAction());
 		actionsList.Add(new shootAction());
+		actionsList.Add(new BuildHouseAction());
+		actionsList.Add(new BuildPyramidAction());
+		actionsList.Add(new GetStoneAction());
+		actionsList.Add(new GetWoodAction());
 	}
 	
 	public static ActionManager Instance
@@ -45,27 +49,22 @@ public class ActionManager {
 			
 			okayToAddAction = false;
 			
-			foreach(KeyValuePair<string, bool> pair in postCon.getProperties())
+			foreach(KeyValuePair<string, WorldStateValue> pair in postCon.getProperties())
 			{
-				if(action.containsPostCondition(pair.Key, !pair.Value))
+				if(action.containsPostCondition(pair.Key, !(bool)pair.Value.propertyValues["bool"]))
 				{
-					Debug.Log("Här är inte roligt att hamna!");
 					okayToAddAction = false;
 					break;
 				}
-				else if(action.containsPostCondition(pair.Key, pair.Value) && action.getAgentTypes().Contains(currentAgent)){
-				
+
+				else if(action.containsPostCondition(pair.Key, (bool)pair.Value.propertyValues["bool"]) && action.getAgentTypes().Contains(currentAgent)){
 					okayToAddAction = true;
 				}
 					
-			}
-			//if(action.containsPostCondition(pair.Key, pair.Value) && action.getAgentTypes().Contains(currentAgent.agentType) /*&& action.containsPostCondition(pair.Value, !pair.Value)*/){
-					
 				if(okayToAddAction == true){
-					Debug.Log("***********Lägger till action " + action.actionName);
 					actionList.Add(action);
 				}
-			
+			}
 		}
 		return actionList;
 	}

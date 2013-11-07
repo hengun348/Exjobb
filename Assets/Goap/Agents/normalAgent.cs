@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public class normalAgent: MonoBehaviour
 {
 	
-	public WorkingMemory wMemory;
+	/*public WorkingMemory wMemory;
 	public Planner planner;
 	public BlackBoard blackBoard;
 	List<AStarNode> plan;
@@ -26,11 +26,11 @@ public class normalAgent: MonoBehaviour
 	
 		subSystems = new List<Subsystem>();
 		
-		subSystems.Add(new WalkSubsystem(blackBoard));
-		subSystems.Add(new JumpSubsystem(blackBoard));
-		subSystems.Add(new ApproachSubsystem(blackBoard));
-		subSystems.Add(new DetonateBombSubsystem(blackBoard));
-		subSystems.Add(new ScoutSubsystem(blackBoard));
+		//subSystems.Add(new WalkSubsystem(blackBoard));
+		//subSystems.Add(new JumpSubsystem(blackBoard));
+		//subSystems.Add(new ApproachSubsystem(blackBoard));
+		//subSystems.Add(new DetonateBombSubsystem(blackBoard));
+		//subSystems.Add(new ScoutSubsystem(blackBoard));
 	
 		
 	}
@@ -42,5 +42,5 @@ public class normalAgent: MonoBehaviour
 			//sub.Update();
 		}
 		
-	}
+	}*/
 }

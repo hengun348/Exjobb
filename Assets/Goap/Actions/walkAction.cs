@@ -9,12 +9,13 @@ public class walkAction : Action {
 	{
 		
 		preConditions = new WorldState();
-		preConditions.setProperty("hasDestination", true);
+		preConditions.setProperty("hasDestination", new WorldStateValue(true));
 		
 		postConditions = new WorldState();
-		postConditions.setProperty("reachedDestination", true);
+		postConditions.setProperty("reachedDestination", new WorldStateValue(true));
 		
 		cost = 4.0f;
+		time = 9.0f;
 		
 		agentTypes = new List<string>();
 		agentTypes.Add("normal");

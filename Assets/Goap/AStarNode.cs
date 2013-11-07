@@ -9,6 +9,7 @@ public class AStarNode {
 	public float f { get; set; }
 	public string name { get; set; }
 	public AStarNode parent {get; set;}
+	public float time {get; set; }
 	
 	public WorldState worldState {get; set;}
 
@@ -49,6 +50,7 @@ public class AStarNode {
 			AStarNode node = new AStarNode();
 			node.name = action.actionName;
 			node.parent = this;
+			node.time = action.time;
 			
 			suitableActions.Add(node);
 		}
