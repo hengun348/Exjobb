@@ -21,7 +21,8 @@ public class ActionManager {
 		actionsList.Add(new scoutAction());
 		actionsList.Add(new shootAction());
 		actionsList.Add(new BuildHouseAction());
-		actionsList.Add(new BuildPyramidAction());
+		actionsList.Add(new CommanderBuildPyramidAction());
+		actionsList.Add(new AgentBuildPyramidAction());
 		actionsList.Add(new GetStoneAction());
 		actionsList.Add(new GetWoodAction());
 	}

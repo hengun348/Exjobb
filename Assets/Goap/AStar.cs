@@ -18,12 +18,12 @@ public class AStar {
 	public List<AStarNode> run(AStarNode startNode, AStarNode endNode)
 	{
 		AStarNode currentNode = startNode;
-		Debug.Log("ADFSDFSDSDF");
+		//Debug.Log("ADFSDFSDSDF");
 		//Specialfall för första noden eftersom den INTE är något action utan en postCondition, räknar med att den aldrig kommer va mål!!!
 		List<AStarNode> neighbourList = currentNode.getNeighbours(true); //ger lista med actions som har startNodes preCondition 	
 		foreach(AStarNode node in neighbourList)
 		{
-			Debug.Log("AAAAAAAA : " + neighbourList.Count);
+			//Debug.Log("AAAAAAAA : " + neighbourList.Count);
 			node.f = ActionManager.Instance.getAction(node.name).cost + heuristic_cost(node, endNode);
 			node.parent = startNode;
 			openList.Add(node); //Lägg till grannarna för start i openList
@@ -44,7 +44,7 @@ public class AStar {
 			openList.Remove(currentNode);
 			closedList.Add(currentNode);
 			
-			Debug.Log("currentNode är nu: " + currentNode.name);
+			//Debug.Log("currentNode är nu: " + currentNode.name);
 			
 			//Check if we have reached the target 
 			if(ActionManager.Instance.getAction(currentNode.name).preConditions.contains(endNode.worldState))
@@ -72,10 +72,10 @@ public class AStar {
 				
 				foreach(KeyValuePair<string, WorldStateValue> pair in ActionManager.Instance.getAction(currentNode.name).preConditions.getProperties())
 				{
-					Debug.Log("GDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" + pair.Value.propertyValues["amount"]);
+					//Debug.Log("GDDDDDDDDDDDDDDDDDDDDDDDDDDDDD" + pair.Value.propertyValues["amount"]);
 					for(int j = 0; j < (int)pair.Value.propertyValues["amount"]; j++)
 					{
-						Debug.Log ("IIIIIIIIIIIIII: " + j);
+						//Debug.Log ("IIIIIIIIIIIIII: " + j);
 						AStar astar2 = new AStar();
 						AStarNode tempNode = new AStarNode();
 						
@@ -111,7 +111,7 @@ public class AStar {
 			
 			
 			neighbourList = currentNode.getNeighbours(false);
-			Debug.Log ("antal grannar: " + neighbourList.Count);
+			//Debug.Log ("antal grannar: " + neighbourList.Count);
 			for(int i = 0; i < neighbourList.Count; i++)
 			{
 				AStarNode currentNeighbour = neighbourList[i];
@@ -123,8 +123,8 @@ public class AStar {
 				
 				if(!openList.Contains(currentNeighbour))
 				{
-					Debug.Log("namnet på grannen: " + currentNeighbour.name);
-					Debug.Log("kontroll om currentneighbour inte finns i openlist: " + !openList.Contains(currentNeighbour));
+					//Debug.Log("namnet på grannen: " + currentNeighbour.name);
+					//Debug.Log("kontroll om currentneighbour inte finns i openlist: " + !openList.Contains(currentNeighbour));
 
 					currentNeighbour.h = heuristic_cost(currentNeighbour, endNode);
 					currentNeighbour.g = currentNode.g + currentNeighbour.time; 
@@ -133,7 +133,7 @@ public class AStar {
 				}	
 			}
 		}
-		Debug.Log ("det blev fel");
+		//Debug.Log ("det blev fel");
 		return new List<AStarNode>();
 	}
 	

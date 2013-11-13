@@ -247,12 +247,7 @@ public class AIPath : MonoBehaviour {
 		//add it here
 		//You can also create a new script which inherits from this one
 		//and override the function in that script
-		if(target == GameObject.FindGameObjectWithTag("target1").transform)
-		{
-			target = GameObject.FindGameObjectWithTag("target2").transform;
-		}else{
-			target = GameObject.FindGameObjectWithTag("target1").transform;
-		}
+	
 	}
 	
 	public void OnDestroy () {

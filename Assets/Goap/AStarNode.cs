@@ -43,10 +43,10 @@ public class AStarNode {
 		
 		tempList = ActionManager.Instance.getSuitableActions(preConditions);
 		
-		Debug.Log("templist count: " + tempList.Count);
+		//Debug.Log("templist count: " + tempList.Count);
 		foreach(Action action in tempList)
 		{
-			Debug.Log("templist name: " + action.actionName);
+			//Debug.Log("templist name: " + action.actionName);
 			AStarNode node = new AStarNode();
 			node.name = action.actionName;
 			node.parent = this;

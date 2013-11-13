@@ -28,11 +28,11 @@ public class Planner{
 		plan = star.run(startNode, endNode);
 		
 		//används under utvecklingsfasen
-		Debug.Log("HÄR ÄR PLANEN!!!!!!!!: " + plan.Count);
+		/*Debug.Log("HÄR ÄR PLANEN!!!!!!!!: " + plan.Count);
 		foreach(AStarNode node in plan)
 		{
 			Debug.Log(node.name);
-		}
+		}*/
 		//----------------------------
 		
 		/*foreach(AStarNode node in plan)
