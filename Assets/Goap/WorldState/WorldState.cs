@@ -14,6 +14,12 @@ public class WorldState {
 		properties = new Dictionary<string, WorldStateValue>();
 	}
 	
+	public WorldState(string name, WorldStateValue stateValue)
+	{
+		properties = new Dictionary<string, WorldStateValue>();
+		properties.Add(name, stateValue);
+	}
+	
 	public Dictionary<string, WorldStateValue> getProperties()
 	{
 		return properties;
@@ -21,7 +27,12 @@ public class WorldState {
 	
 	public void setProperty(string name, WorldStateValue stateValue)
 	{
-		properties.Add(name, stateValue);
+		if(!properties.ContainsKey(name)){
+			
+			properties.Add(name, stateValue);
+		} else {
+			properties[name] = stateValue;
+		}		
 	}
 	
 	public WorldStateValue getValue(string name)
@@ -34,9 +45,10 @@ public class WorldState {
 	{
 		properties.Remove(name);
 	}
-	
+		
 	public bool contains(WorldState ws)
 	{
+				
 		Dictionary<string, WorldStateValue> wsProperties = ws.getProperties();
 		
 		foreach(KeyValuePair<string, WorldStateValue> pair in properties)
@@ -59,5 +71,19 @@ public class WorldState {
 			}
 		}
 		return true;
+		
+		
+	}
+	
+	
+	//If a preCondition contains an entry with amount
+	public bool containsAmount(){
+		foreach(KeyValuePair<string, WorldStateValue> pair in properties){
+				if((int)pair.Value.propertyValues["amount"] > 1){
+				
+					return true;
+				}
+			}
+		return false;
 	}
 }

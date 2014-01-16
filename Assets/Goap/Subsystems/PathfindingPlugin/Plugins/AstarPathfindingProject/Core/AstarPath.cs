@@ -668,11 +668,13 @@ public class AstarPath : MonoBehaviour {
 		
 		string debug = p.DebugString (logPathResults);
 		
-		if (logPathResults == PathLog.InGame) {
+		//***************HAR ÄNDRAT SJÄLV*************//
+		
+		/*if (logPathResults == PathLog.InGame) {
 			inGameDebugPath = debug;
 		} else {
 			Debug.Log (debug);
-		}
+		}*/
 	}
 	
 	

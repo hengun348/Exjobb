@@ -4,11 +4,17 @@ using System.Collections.Generic;
 
 public class WorkingMemoryValue {
 	
-	public object factValue;
+	private object factValue;
 	
 	public WorkingMemoryValue(object factValue){
 	
 		this.factValue = factValue;
+		
+	}
+	
+	public object GetFactValue()
+	{
+		return factValue;
 		
 	}
 

@@ -4,17 +4,14 @@ using System.Collections.Generic;
 
 public class AStarNode {
 	
-	public float h { get; set; }
-	public float g { get; set; }
-	public float f { get; set; }
-	public string name { get; set; }
-	public AStarNode parent {get; set;}
-	public float time {get; set; }
-	
-	public WorldState worldState {get; set;}
-
-	//public Action action { get; set; }
-	public List<AStarNode> suitableActions; //All the neighbouring nodes
+	private float h;
+	private float g;
+	private float f;
+	private string name;
+	private AStarNode parent;
+	private float time;
+	private WorldState worldState;
+	private List<AStarNode> suitableActions; //All the neighbouring nodes
 	
 	public AStarNode()
 	{
@@ -60,5 +57,75 @@ public class AStarNode {
 	public void addNeighbour(AStarNode node)
 	{
 		suitableActions.Add(node);
+	}
+	
+	public void setH(float h)
+	{
+		this.h = h;
+	}
+	
+	public void setF(float f)
+	{
+		this.f = f;
+	}
+	
+	public void setG(float g)
+	{
+		this.g = g;
+	}
+	
+	public float getH()
+	{
+		return h;
+	}
+	
+	public float getF()
+	{
+		return f;
+	}
+	
+	public float getG()
+	{
+		return g;
+	}
+	
+	public void setName(string name)
+	{
+		this.name = name;
+	}
+	
+	public void setParent(AStarNode parent)
+	{
+		this.parent = parent;
+	}
+	
+	public void setTime(float time)
+	{
+		this.time = time;
+	}
+	
+	public string getName()
+	{
+		return name;
+	}
+	
+	public AStarNode getParent()
+	{
+		return parent;
+	}
+	
+	public float getTime()
+	{
+		return time;
+	}
+	
+	public WorldState getWorldState()
+	{
+		return worldState;
+	}
+	
+	public void setWorldState(WorldState worldState)
+	{
+		this.worldState = worldState;
 	}
 }

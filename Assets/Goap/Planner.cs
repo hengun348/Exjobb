@@ -5,12 +5,15 @@ using System.Collections.Generic;
 public class Planner{
 	
 	
-	public WorldState goalWorldState;
-	private List<AStarNode> plan;
+	private WorldState goalWorldState;
 	//private string currentAgent;
 	
+	public void SetGoalWorldState(WorldState goalWorldState)
+	{
+		this.goalWorldState = goalWorldState;
+	}
 	
-	public List<AStarNode> runAStar(WorldState currentWorldState){
+	public List<AStarNode> RunAStar(WorldState currentWorldState){
 		
 		
 		
@@ -18,14 +21,14 @@ public class Planner{
 		AStarNode startNode = new AStarNode();
 		AStarNode endNode = new AStarNode();
 		
-		startNode.worldState = goalWorldState;
-		endNode.worldState = currentWorldState;
+		startNode.setWorldState(goalWorldState);
+		endNode.setWorldState(currentWorldState);
 		
 		AStar star = new AStar();
+			
 		
-
-		
-		plan = star.run(startNode, endNode);
+		List<AStarNode> plan = star.Run(startNode, endNode);
+	
 		
 		//används under utvecklingsfasen
 		/*Debug.Log("HÄR ÄR PLANEN!!!!!!!!: " + plan.Count);

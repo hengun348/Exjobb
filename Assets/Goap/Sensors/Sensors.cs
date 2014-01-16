@@ -7,16 +7,14 @@ public class Sensors: MonoBehaviour {
 	
 	void Start(){
 		//add all the sensors
-		/*gameObject.AddComponent("ScoutSubsystem");
-		gameObject.AddComponent("ApproachSubsystem");
-		gameObject.AddComponent("DetonateBombSubsystem");
-		gameObject.AddComponent("GetWoodSubsystem");
-		gameObject.AddComponent("GetStoneSubsystem");
-		gameObject.AddComponent("BuildHouseSubsystem");
-		gameObject.AddComponent("BuildPyramidSubsystem");*/
+		GameObject ResSens = new GameObject("ResourceSensor");
+		ResSens.transform.position = transform.position;
+		ResSens.transform.parent = transform;
+		ResSens.AddComponent("ResourceSensor");
 		
-	}
-	
-
-	
+		GameObject EnSens = new GameObject("EnemySensor");
+		EnSens.transform.position = transform.position;
+		EnSens.transform.parent = transform;
+		EnSens.AddComponent("EnemySensor");
+	}	
 }

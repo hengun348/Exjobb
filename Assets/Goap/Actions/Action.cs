@@ -10,13 +10,15 @@ public class Action {
 	public float time {get; set; }
 	public string actionName;
 	protected List<string> agentTypes;
+	public bool isShareable = false;
 	
-	public List<string> getAgentTypes()
+	public List<string> GetAgentTypes()
 	{
 		return agentTypes;
 	}
 	
-	public bool containsPreCondition(string condition, bool val)
+	//KAN SLÅ IHOP PRE- OCH POSTCONDITIONS!!!!
+	public bool ContainsPreCondition(string condition, bool val)
 	{
 		
 		Dictionary<string, WorldStateValue> preConditionsList = preConditions.getProperties();	
@@ -32,7 +34,7 @@ public class Action {
 		return false;
 	}
 	
-	public bool containsPostCondition(string condition, bool val)
+	public bool ContainsPostCondition(string condition, bool val)
 	{
 		Dictionary<string, WorldStateValue> postConditionsList = postConditions.getProperties();	
 		
@@ -44,5 +46,10 @@ public class Action {
 			}
 		}
 		return false;
+	}
+	
+	public virtual bool PreConditionsFulfilled(){
+	
+		return true;
 	}
 }

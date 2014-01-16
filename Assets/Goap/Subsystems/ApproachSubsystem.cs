@@ -18,10 +18,10 @@ public class ApproachSubsystem: MonoBehaviour{
 	}
 	
 	void Update(){
-		if(((Agent)controller.GetComponent("Agent")).currentAction == "approachAction"){
+		/*if(((Agent)controller.GetComponent("Agent")).currentAction == "approachAction"){
 			Debug.Log("*APPROACHING*");			
 			((Agent)controller.GetComponent("Agent")).actionIsDone = true;
 			
-		}
+		}*/
 	}	
 }

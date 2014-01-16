@@ -3,9 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class WorkingMemory {
-	
-	
-	
 	private Dictionary<string, List<WorkingMemoryValue>> knownFacts;
 	private BlackBoard blackBoard;
 	
@@ -15,7 +12,7 @@ public class WorkingMemory {
 		blackBoard = BlackBoard.Instance;
 	}
 	
-	public void setFact(string name, WorkingMemoryValue factValue)
+	public void SetFact(string name, WorkingMemoryValue factValue)
 	{
 		if(!knownFacts.ContainsKey(name)){
 			List<WorkingMemoryValue> tempList = new List<WorkingMemoryValue>();
@@ -27,40 +24,40 @@ public class WorkingMemory {
 		}
 		
 		//Check if it is a globaly important fact that everyone needs to know about, then send it to the blackboard
-		if(name == "Wood" || name == "Stone" || name == "Building"){
-			
-			blackBoard.setFact(name, factValue);
-			
+		if(name == "Red" || name == "Blue" || name == "Yellow" || name == "Buildings" || name == "Orange"){
+			blackBoard.SetFact(name, factValue);
 		}
 	}
 	
-	public List<WorkingMemoryValue> getFact(string name)
+	public List<WorkingMemoryValue> GetFact(string name)
 	{
 		//If the fact is not in WorkingMemory the check if it is in the blackboard 		
-		if(containsFact(name))
+		if(ContainsFact(name))
 		{
 			return knownFacts[name]; 
 		} else {
 			//check in blackboard
-			List<WorkingMemoryValue> temp = blackBoard.getFact(name);
-			
-			
+			List<WorkingMemoryValue> temp = blackBoard.GetFact(name);
 			return temp; //OBS! returnerar bara första värdet ur listan! 
-			
-			
 		}
-		
-		
 	}
 	
-	public bool containsFact(string name)
+	public bool ContainsFact(string name)
 	{
 		return knownFacts.ContainsKey(name);
 	}
 	
-	public void removeFact(string name)
+	public void RemoveFact(string name)
 	{
 		knownFacts.Remove(name);
 	}
-
+	
+	public void PrintWorkingMemory()
+	{
+		Debug.Log("My memory contains: ");
+		foreach(KeyValuePair<string, List<WorkingMemoryValue>> fact in knownFacts)
+		{
+			Debug.Log(fact.Key);
+		}
+	}
 }

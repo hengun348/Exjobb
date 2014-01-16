@@ -35,7 +35,7 @@ public class BuildPyramidSubsystem: MonoBehaviour{
 				start = controller.transform.position.x;
 				firstTime = true;
 				
-				moveToPosition = (Vector3)((Agent)controller.GetComponent("Agent")).wMemory.getFact("buildPyramidPosition")[0].factValue;//new Vector3(jumpHeight,0,0);
+				moveToPosition = (Vector3)((Agent)controller.GetComponent("Agent")).wMemory.getFact("buildPyramidPosition")[0].getFactValue();//new Vector3(jumpHeight,0,0);
 				
 				
 			}

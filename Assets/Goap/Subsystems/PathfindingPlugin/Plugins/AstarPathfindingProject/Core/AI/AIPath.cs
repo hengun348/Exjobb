@@ -225,7 +225,9 @@ public class AIPath : MonoBehaviour {
 	/** Requests a path to the target */
 	public virtual void SearchPath () {
 		
-		if (target == null) { Debug.LogError ("Target is null, aborting all search"); canSearch = false; return; }
+		/***************HAR ÄNDRAT SJÄLV*******************/
+		
+		if (target == null) { /*Debug.LogError ("Target is null, aborting all search");*/ canSearch = false; return; }
 		
 		lastRepath = Time.time;
 		//This is where we should search to

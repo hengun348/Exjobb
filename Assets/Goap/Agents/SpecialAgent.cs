@@ -46,7 +46,7 @@ public class SpecialAgent: MonoBehaviour
 		
 		
 		//Debug.Log ("index: " + planIndex);
-		this.agentType = "specialAgent";
+		this.agentType = "Builder";
 		//controller = GetComponent<CharacterController>();
 		
 		actionIsDone = true;
