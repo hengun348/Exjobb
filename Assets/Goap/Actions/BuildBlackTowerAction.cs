@@ -8,13 +8,13 @@ public class BuildBlackTowerAction : Action {
 	public BuildBlackTowerAction()
 	{
 		preConditions = new WorldState();
-		//preConditions.setProperty("greenResourceIsCollected", new WorldStateValue(true));
+		preConditions.setProperty("greenResourceIsCollected", new WorldStateValue(true));
 		preConditions.setProperty("orangeResourceIsCollected", new WorldStateValue(true));
 		//preConditions.setProperty("magentaResourceIsCollected", new WorldStateValue(true));
 		
 		postConditions = new WorldState();
 		postConditions.setProperty("blackTowerIsBuilt", new WorldStateValue(true));
-		//postConditions.setProperty("greenResourceIsCollected", new WorldStateValue(false));
+		postConditions.setProperty("greenResourceIsCollected", new WorldStateValue(false));
 		postConditions.setProperty("orangeResourceIsCollected", new WorldStateValue(false));
 		//postConditions.setProperty("magentaResourceIsCollected", new WorldStateValue(false));
 		

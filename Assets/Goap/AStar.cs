@@ -56,25 +56,10 @@ public class AStar {
 				return CreatePath(currentNode, startNode);
 			}
 			
-			bool containsPreWithAmount = false;
 			
-			if( ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties().Count == 1){
-				/*foreach(KeyValuePair<string, WorldStateValue> pair in ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties()){
 				
-						if((int)pair.Value.propertyValues["amount"] > 1){
-						
-							containsPreWithAmount = true;
-						}
-				
-				}*/
-				
-				containsPreWithAmount = ActionManager.Instance.getAction(currentNode.getName()).preConditions.containsAmount();
-	
-				
-			}
-				
-			//if multiple preconditions
-			if(ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties().Count > 1 || containsPreWithAmount)
+			//if multiple preconditions or multiple amounts of the same condition
+			if(ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties().Count > 1 || ActionManager.Instance.getAction(currentNode.getName()).preConditions.containsAmount())
 			{
 				List<List<AStarNode>> lists = new List<List<AStarNode>>();
 				
@@ -93,8 +78,11 @@ public class AStar {
 						tempNode.setWorldState(tempWorldState);
 						
 						List<AStarNode> tempList = new List<AStarNode>();
+						//List<AStarNode> test = astar2.Run(tempNode, endNode);
+						//test.Reverse();
 						tempList.AddRange(astar2.Run(tempNode, endNode));
-						tempList[0].setParent(currentNode); //nyligen tillagd 
+						
+						tempList[tempList.Count-1].setParent(currentNode); //nyligen tillagd 
 						
 						if(tempList.Count > 0)
 						{
@@ -110,10 +98,12 @@ public class AStar {
 					}
 				}
 				
+				//Sorts by cost to make the plan prioritize actions with small costs
 				lists.Sort((a, b) => ActionManager.Instance.getAction(a[0].getName()).cost.CompareTo(ActionManager.Instance.getAction(b[0].getName()).cost));
 				
 				foreach(List<AStarNode> list in lists)
 				{
+					//add to final path
 					pathList.AddRange(list);
 				}
 				return CreatePath(currentNode, startNode);

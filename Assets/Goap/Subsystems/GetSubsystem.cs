@@ -53,7 +53,7 @@ public class GetSubsystem: MonoBehaviour{
 				}
 			} else 
 			{
-				((Agent)agentComponent.GetComponent("Agent")).GetWMemory().PrintWorkingMemory();
+				//((Agent)agentComponent.GetComponent("Agent")).GetWMemory().PrintWorkingMemory();
 				//Debug.Log(((Agent)agentComponent).GetWMemory().GetFact(facts[1])[1].GetFactValue());
 				if(((Agent)agentComponent).GetWMemory().GetFact(facts[1]).Count > 0)
 				{

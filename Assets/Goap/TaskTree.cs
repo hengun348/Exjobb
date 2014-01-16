@@ -34,18 +34,54 @@ public class TaskTree : MonoBehaviour {
 				}
 			}
 		}
-		PrintTree();
+		
+		
+		//--------------------------
+			List<TreeNode> haha = new List<TreeNode>();
+			haha.Add(new TreeNode(new Vector3(),"level1", root, 1));
+			haha.Add(new TreeNode(new Vector3(),"level2", haha[0], 1));
+			haha.Add(new TreeNode(new Vector3(),"level2", haha[0], 1));
+			haha.RemoveAt(0);
+			haha.Add(new TreeNode(new Vector3(),"level3", haha[0], 1));
+			haha.Add(new TreeNode(new Vector3(),"level3", haha[0], 1));
+			haha.Add(new TreeNode(new Vector3(),"level3", haha[1], 1));
+			haha.Add(new TreeNode(new Vector3(),"level3", haha[1], 1));
+			haha.RemoveAt(0);
+			haha.RemoveAt(0);
+		
+		//--------------------------
+		
+		Debug.Log("Print tree: ");
+		PrintTree(leafs);
+		Debug.Log("Tree completed: ");
 	}
 	
-	public void PrintTree()
+	public void PrintTree(List<TreeNode> level)
 	{
-		string level = "Leafs: ";
-		foreach(TreeNode node in leafs)
+		bool reachedRoot = true;
+		string currentLevel = "";
+		List<TreeNode> parents = new List<TreeNode>();
+		
+		
+		foreach(TreeNode node in level)
 		{
-			level += node.GetActionName() + " ";
-			
+			currentLevel += node.GetActionName();
+			if(node.GetParent() != null)
+			{
+				currentLevel += "(" + node.GetParent().GetActionName() + ") ";
+				if(!parents.Contains(node.GetParent()))
+				{
+					parents.Add(node.GetParent());
+				}
+				reachedRoot = false;
+			}
 		}
-		Debug.Log ("**LÖÖÖÖÖÖV" + level);	
+		
+		if(reachedRoot == false)
+		{
+			Debug.Log ("Number of nodes in level: " + level.Count + ": " + currentLevel);
+			PrintTree(parents);
+		}	
 	}
 
 	
@@ -125,7 +161,7 @@ public class TaskTree : MonoBehaviour {
 		if(ownedNode.GetParent() != null && ownedNode.GetParent() != root && CheckForChildren(ownedNode.GetParent()) == false)
 		{
 			leafs.Add(ownedNode.GetParent());
-			PrintTree();
+			PrintTree(leafs);
 		}	
 	}
 	

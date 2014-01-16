@@ -32,7 +32,7 @@ public class BuildingCommander: MonoBehaviour
 		//goals.Add( new WorldState("magentaFactoryIsBuilt", new WorldStateValue(true)));
 		
 		goals.Add( new WorldState("blackTowerIsBuilt", new WorldStateValue(true)));
-		goals.Add( new WorldState("blackTowerIsBuilt", new WorldStateValue(true)));
+		//goals.Add( new WorldState("blackTowerIsBuilt", new WorldStateValue(true)));
 		//goals.Add( new WorldState("purpleHouseIsBuilt", new WorldStateValue(true)));
 		//goals.Add( new WorldState("purpleHouseIsBuilt", new WorldStateValue(true)));
 		
@@ -49,7 +49,14 @@ public class BuildingCommander: MonoBehaviour
 			Debug.Log("STARTPLAN!!!!!!!!: " + plan.Count);
 			foreach(AStarNode node in plan)
 			{
-				Debug.Log("-----" + node.getName());
+				if(node.getParent().getName() != null)
+				{
+					Debug.Log("-----" + node.getName() + "(" + node.getParent().getName() + ")");
+				}
+				else
+				{
+					Debug.Log("-----" + node.getName() + "()");
+				}
 			}
 			
 
@@ -57,6 +64,7 @@ public class BuildingCommander: MonoBehaviour
 				Debug.Log ("Plan count: " + plan.Count);
 			//Add the wireframe for each house!!!
 			for(int j = plan.Count-1; j > -1; j--)
+			//for(int j = 0; j < plan.Count-1; j++)
 			{
 				Debug.Log ("PlanStep " + plan[j].getName() );
 				
