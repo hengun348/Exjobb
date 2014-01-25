@@ -4,12 +4,17 @@ using System.Collections.Generic;
 using System;
 
 public class IdleSubsystem : MonoBehaviour {	
-	void Start()
-	{
-		Debug.Log ("Hanging around with nothing to do");
+	Vector3 moveToPosition;
+	GameObject agentObject;
+	WalkSubsystem walker;
+	
+	void Awake(){
+		agentObject = gameObject.transform.parent.gameObject;
 	}
 	
-	void Update()
-	{
+	void Start(){
+		walker = (WalkSubsystem)gameObject.GetComponent("WalkSubsystem");
+		moveToPosition = agentObject.transform.position; 
+		walker.StartWalking(moveToPosition);
 	}
 }

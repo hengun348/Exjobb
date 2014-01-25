@@ -15,7 +15,8 @@ public class ResourceSensor: MonoBehaviour {
 		sensor.isTrigger = true;
 	}
 	
-	void OnTriggerEnter(Collider other) { 
+	void OnTriggerEnter(Collider other) {
+		
 		if (other.gameObject.tag == "BlueSource") {
 			//Debug.Log("Yay!"); 
 			((Agent)agentComponent).GetWMemory().SetFact("Blue", new WorkingMemoryValue(other.transform.position)); 

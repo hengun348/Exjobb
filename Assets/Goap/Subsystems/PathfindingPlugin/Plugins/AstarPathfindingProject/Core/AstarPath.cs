@@ -638,7 +638,8 @@ public class AstarPath : MonoBehaviour {
 		}
 		
 		if (active.logPathResults != PathLog.None && active.logPathResults != PathLog.OnlyErrors) {
-			Debug.Log (s);
+			//Debug.Log (s);
+			//TODO: kontrollera om detta behövs för att få reda på andra fel än "1 small area were detected...."
 		}
 	}
 	
@@ -666,9 +667,9 @@ public class AstarPath : MonoBehaviour {
 			return;
 		}
 		
-		string debug = p.DebugString (logPathResults);
+		//string debug = p.DebugString (logPathResults);
 		
-		//***************HAR ÄNDRAT SJÄLV*************//
+		//TODO: ***************HAR ÄNDRAT SJÄLV*************//
 		
 		/*if (logPathResults == PathLog.InGame) {
 			inGameDebugPath = debug;

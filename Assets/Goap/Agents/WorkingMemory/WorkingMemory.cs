@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class WorkingMemory {
 	private Dictionary<string, List<WorkingMemoryValue>> knownFacts;
 	private BlackBoard blackBoard;
+	private string clan;
 	
 	public WorkingMemory(){
 	
@@ -25,7 +26,7 @@ public class WorkingMemory {
 		
 		//Check if it is a globaly important fact that everyone needs to know about, then send it to the blackboard
 		if(name == "Red" || name == "Blue" || name == "Yellow" || name == "Buildings" || name == "Orange"){
-			blackBoard.SetFact(name, factValue);
+			blackBoard.SetFact(clan, name, factValue);
 		}
 	}
 	
@@ -37,7 +38,7 @@ public class WorkingMemory {
 			return knownFacts[name]; 
 		} else {
 			//check in blackboard
-			List<WorkingMemoryValue> temp = blackBoard.GetFact(name);
+			List<WorkingMemoryValue> temp = blackBoard.GetFact(clan, name);
 			return temp; //OBS! returnerar bara första värdet ur listan! 
 		}
 	}
@@ -59,5 +60,10 @@ public class WorkingMemory {
 		{
 			Debug.Log(fact.Key);
 		}
+	}
+	
+	public void SetClan(string clan)
+	{
+	 	this.clan = clan;
 	}
 }

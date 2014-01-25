@@ -2,22 +2,24 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class AssistingSubsystem: MonoBehaviour{
+public class AssistingSubsystem : MonoBehaviour{
 	
 	Vector3 moveToPosition;
-	Component agentComponent;
+	Agent agentComponent;
 	GameObject agentObject;
 	bool actionIsDone;
+	string clan;
+	WalkSubsystem walker;
 	
 	void Awake(){
 		agentObject = gameObject.transform.parent.gameObject;
-		agentComponent = agentObject.GetComponent("Agent");
+		agentComponent = (Agent)agentObject.GetComponent("Agent");
+		clan = agentComponent.GetClan();
 	}
 	
 	IEnumerator Start(){
-		((AIPath)(agentObject.GetComponent("AIPath"))).canMove = true;
-		((AIPath)(agentObject.GetComponent("AIPath"))).canSearch = true;
-		moveToPosition = BlackBoard.Instance.GetTaskTree().GetOwnedNode(((Agent)agentComponent).getAgentNumber()).GetPosition(); 
+		walker = (WalkSubsystem)gameObject.GetComponent("WalkSubsystem");
+		moveToPosition = BlackBoard.Instance.GetTaskTree(clan).GetOwnedNode(agentComponent.getAgentNumber()).GetPosition(); 
 		actionIsDone = false;
 		
 		yield return StartCoroutine(Assist());
@@ -27,22 +29,11 @@ public class AssistingSubsystem: MonoBehaviour{
 	
 	IEnumerator Assist(){
 		while(actionIsDone == false){	
-
-			((Agent)agentComponent).getTarget().transform.position = moveToPosition;
-			((AIPath)(agentObject.GetComponent("AIPath"))).target = ((Agent)agentComponent).getTarget().transform;
+			walker.StartWalking(moveToPosition);
 			
-			
-			//if((Mathf.Abs(moveToPosition.x - agentObject.transform.position.x) <= 2) &&  (Mathf.Abs(moveToPosition.z - agentObject.transform.position.z) <= 2)) //Need to check if there are actions not done in the helplist which this agent have post, if it is then wait with current action!
-			if(Vector3.Distance(moveToPosition, agentObject.transform.position) <= 2)
+			if(BlackBoard.Instance.GetTaskTree(clan).GetOwnedNode(agentComponent.getAgentNumber()).GetPosition().Equals(new Vector3(30, 0.5f, 30)))
 			{
-				
-				((AIPath)(agentObject.GetComponent("AIPath"))).canMove = false;
-				((AIPath)(agentObject.GetComponent("AIPath"))).canSearch = false;
-			}
-			
-			if(BlackBoard.Instance.GetTaskTree().GetOwnedNode(((Agent)agentComponent).getAgentNumber()).GetPosition().Equals(new Vector3(30, 0.5f, 30)))
-			{
-				((Agent)agentComponent).RemoveEnergy();
+				agentComponent.RemoveEnergy();
 				actionIsDone = true;
 			}
 			yield return null;

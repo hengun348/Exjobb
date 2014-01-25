@@ -8,7 +8,7 @@ public class Action {
 	public WorldState postConditions;
 	public float cost;
 	public float time {get; set; }
-	public string actionName;
+	protected string actionName;
 	protected List<string> agentTypes;
 	public bool isShareable = false;
 	
@@ -52,4 +52,10 @@ public class Action {
 	
 		return true;
 	}
+	
+	public string GetActionName()
+	{
+		return actionName;
+	}
+
 }

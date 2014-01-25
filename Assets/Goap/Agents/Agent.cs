@@ -5,7 +5,7 @@ using System.Timers;
 
 public class Agent: MonoBehaviour
 {
-	
+
 	private WorkingMemory wMemory;
 	//private WorldState currentWorldState;
 	private BlackBoard blackBoard; 
@@ -15,7 +15,7 @@ public class Agent: MonoBehaviour
 
 	//public string currentAction;
 	private GameObject gui, target;
-	private System.Guid agentNumber;
+	public System.Guid agentNumber;
 	private List<string> subsystemFacts; 
 	
 	public int totalSkillpoints;
@@ -27,6 +27,8 @@ public class Agent: MonoBehaviour
 	public float Buildskill, Collectskill;
 	
 	public Color agentColor;
+	
+	private string clan;
 	
 	
 	void Start(){
@@ -58,6 +60,7 @@ public class Agent: MonoBehaviour
 		
 		//WORKING MEMORY
 		wMemory = new WorkingMemory();
+		wMemory.SetClan(clan);
 		
 		blackBoard = BlackBoard.Instance;
 	}
@@ -67,11 +70,11 @@ public class Agent: MonoBehaviour
 		//Set speed of agent depending on its energy
 		((AIPath)gameObject.GetComponent("AIPath")).speed = 0.1f * energy;
 		
-		if((transform.childCount == 3 && plan.Count == 1) || plan[0] == "Idle"){
-			blackBoard.GetTaskTree().RemoveNode(agentNumber);
+		if((transform.childCount == 2 && plan.Count == 1) || plan[0] == "Idle"){
+			blackBoard.GetTaskTree(clan).RemoveNode(this);
 			StartCoroutine(((PlanGUI)gameObject.transform.FindChild("PlanGUI").GetComponent("PlanGUI")).FadeTo(0.0f, 1.0f));//fades the gui out
 
-			plan[0] = blackBoard.GetActionForAgent(this); //returns "Idle" if no actions are possible	
+			plan[0] = blackBoard.GetActionForAgent(clan, this); //returns "Idle" if no actions are possible	
 			
 			if(plan[0] != "Idle")
 			{
@@ -79,7 +82,7 @@ public class Agent: MonoBehaviour
 				AddSubsystem();
 			}
 			
-		}else if(transform.childCount == 3 && plan.Count > 1){
+		}else if(transform.childCount == 2 && plan.Count > 1){
 			//ta bort som ägare till noden? och gör resten av planen
 			StartCoroutine(((PlanGUI)gameObject.transform.FindChild("PlanGUI").GetComponent("PlanGUI")).FadeTo(0.0f, 1.0f));//fades the gui out
 			plan.RemoveAt(0);
@@ -88,8 +91,8 @@ public class Agent: MonoBehaviour
 			
 		}
 		
-		Collectskill = skillArray["collectSkillpoints"];
-		Buildskill = skillArray["buildSkillpoints"];
+		//Collectskill = skillArray["collectSkillpoints"];
+		//Buildskill = skillArray["buildSkillpoints"];
 		
 	}
 	
@@ -119,6 +122,7 @@ public class Agent: MonoBehaviour
 	
 	private void AddSubsystem() 
 	{ 
+		subsystemFacts.Clear();
 		string subsystemToLoad = "";
 		GameObject sub = new GameObject("Subsystem"); 
 		sub.transform.position = transform.position; 
@@ -145,6 +149,7 @@ public class Agent: MonoBehaviour
 			subsystemToLoad += "Subsystem";
 		}
 		sub.AddComponent(subsystemToLoad); 
+		sub.AddComponent("WalkSubsystem"); 
 	}
 		
 	private void AddSensors()
@@ -169,7 +174,7 @@ public class Agent: MonoBehaviour
 	private void AddPathfinding()
 	{
 		target = new GameObject("Target");
-		target.transform.parent = gameObject.transform;
+		target.transform.parent = gameObject.transform.parent.transform;
 		
 		gameObject.AddComponent("Seeker");
 		gameObject.AddComponent("AIPath");
@@ -194,11 +199,19 @@ public class Agent: MonoBehaviour
     }
 	
 	private void SetColor(){
-	
-		string tag = gameObject.tag.ToString(); 
-		agentColor = BlackBoard.Instance.GetColorForObject(tag);
-		gameObject.renderer.material.color =  agentColor;
+		/*string clanColor = "";
+		for (int i = 1; i < clan.Length; i++) 
+		{ 
+			if (char.IsUpper(clan[i])) 
+			{ 	
+				clanColor = clan.Substring(0, i-1); 
+				break; 
+			} 
+		}
 		
+		agentColor = BlackBoard.Instance.GetColorForObject(clanColor);*/
+		agentColor = BlackBoard.Instance.GetColorForObject(name);
+		gameObject.renderer.material.color = agentColor;
 	}
 	
 	public WorkingMemory GetWMemory(){
@@ -212,7 +225,7 @@ public class Agent: MonoBehaviour
 	
 	public string getAgentType()
 	{
-		return tag;
+		return name;
 	}
 	
 	public System.Guid getAgentNumber()
@@ -331,13 +344,13 @@ public class Agent: MonoBehaviour
 	
 	public List<string> GetSubsystemFacts()
 	{
-		List<string> temp = new List<string>();
+		/*List<string> temp = new List<string>();
 		foreach(string fact in subsystemFacts)
 		{
 			temp.Add(fact);
 		}
-		subsystemFacts.Clear();
-		return temp;
+		subsystemFacts.Clear();*/
+		return subsystemFacts;
 	}
 	
 	public void RemoveEnergy()
@@ -346,5 +359,15 @@ public class Agent: MonoBehaviour
 		{
 			energy -= 10;
 		}*/
+	}
+	
+	public void SetClan(string clan)
+	{
+	 	this.clan = clan;
+	}
+	
+	public string GetClan()
+	{
+	 	return clan;
 	}
 }

@@ -66,6 +66,45 @@ public class ActionManager /*: MonoBehaviour*/{
 		}
 	}
 	
+	public WorldState GetGoal(int slump)
+	{
+		string key = "";
+		WorldStateValue val = new WorldStateValue(true);
+		Action action = actionsList[slump];//.GetActionName();
+		foreach(KeyValuePair<string,WorldStateValue> pair in action.postConditions.getProperties())
+		{
+			key = pair.Key;
+			val = pair.Value;
+			break;
+		}
+		//int slump = 3;
+		/*string toBuild;
+		
+		string action = actionsList[slump].GetActionName();
+		
+		for (int i = 1; i < action.Length; i++) 
+		{ 
+				if (char.IsUpper(action[i])) 
+				{ 	
+					toBuild = action.Substring(i, action.Length-6); 
+					break; 
+				} 
+		}
+		
+		
+		if(action.Substring(0, 1) == "B")
+		{
+			toBuild = action.Substring(5, action.Length-6);
+			char.ToLower(toBuild[0]);
+			//toBuild = char.ToLower(toBuild[0]) + toBuild.Substring(1);
+			
+			Debug.Log ("------------------------------>GetGoal()" + toBuild);
+			return new WorldState(toBuild + "IsBuilt", new WorldStateValue(true));
+		}*/
+		Debug.Log ("------------------------------>GetGoal()" + key);
+		return new WorldState(key, val);
+	}
+	
 	public List<Action> getSuitableActions(WorldState postCon)
 	{
 		//return the list with actions suitable for a certain goal
@@ -106,7 +145,7 @@ public class ActionManager /*: MonoBehaviour*/{
 	{
 		foreach(Action action in actionsList)
 		{
-			if (action.actionName == name)
+			if (action.GetActionName() == name)
 			{
 				return action;
 			}
@@ -115,7 +154,8 @@ public class ActionManager /*: MonoBehaviour*/{
 	}
 	
 	
-	public List<string> AgentsThatDoAction(string agent, string actionName){
+	public List<string> AgentsThatDoAction(string agent, string actionName)
+	{
 		
 		Action action = getAction(actionName);
 		List<string> agents = action.GetAgentTypes();

@@ -30,6 +30,11 @@ public class TreeNode {
 		return parent;
 	}
 	
+	public void SetParent(TreeNode parent)
+	{
+		 this.parent = parent;
+	}
+	
 	public List<Agent> GetAssisters()
 	{
 		return assistList;

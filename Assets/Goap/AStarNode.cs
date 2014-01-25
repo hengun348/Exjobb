@@ -12,6 +12,7 @@ public class AStarNode {
 	private float time;
 	private WorldState worldState;
 	private List<AStarNode> suitableActions; //All the neighbouring nodes
+
 	
 	public AStarNode()
 	{
@@ -45,7 +46,7 @@ public class AStarNode {
 		{
 			//Debug.Log("templist name: " + action.actionName);
 			AStarNode node = new AStarNode();
-			node.name = action.actionName;
+			node.name = action.GetActionName();
 			node.parent = this;
 			node.time = action.time;
 			

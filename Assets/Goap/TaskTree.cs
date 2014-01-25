@@ -2,91 +2,158 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class TaskTree : MonoBehaviour {
+public class TaskTree : MonoBehaviour{
 
 	TreeNode root;
 	List<TreeNode> leafs; //A list of the leafs of the tree 
+	List<List<TreeNode>> tree;
 	
 	public TaskTree()
 	{
-		root = new TreeNode(new Vector3(0 , 30, 0)); //Dummy node
 		leafs = new List<TreeNode>();
+		tree = new List<List<TreeNode>>();
 	}
 	
-	public void AddSubtree(AStarNode planStep, Vector3 position, int treeIndex) //adds a new plan to the tree as a subtree to the root node
-	{
+	//public void AddSubtree(AStarNode planStep, Vector3 position, int treeIndex) //adds a new plan to the tree as a subtree to the root node
+	public void AddSubtree(List<TreeNode> plan)
+	{	
 		
-		if(planStep.getParent().getName() == null)
+		foreach(TreeNode planStep in plan)
 		{
-			leafs.Add(new TreeNode(position, planStep.getName(), root, treeIndex)); //Add first node in tree to the root
-		} else {	
-			int a = leafs.Count;
-			for(int i = 0; i<a; i++)
+			int levelForNode = 0;
+			TreeNode node = planStep;
+			
+			while(node.GetParent() != null)
 			{
-				if( planStep.getParent().getName() == leafs[i].GetActionName() && leafs[i].GetIndex() == treeIndex)
+				node = node.GetParent();
+				levelForNode++;
+			}
+			
+			if(levelForNode > tree.Count-1)
+			{
+				List<TreeNode> tempList = new List<TreeNode> ();
+				tempList.Add(planStep);
+				tree.Insert(levelForNode, tempList);
+				
+			} else {
+				List<TreeNode> tempList = tree[levelForNode];
+				tree.Remove(tempList);
+				tempList.Add(planStep);
+				
+				tree.Insert(levelForNode, tempList);
+			}
+			//if(planStep.GetParent() != null)
+			//Debug.Log("lägger till " + planStep.GetActionName() + " som har parent: " + planStep.GetParent().GetActionName());
+			
+		}
+
+		//add leafs
+		foreach(TreeNode node in tree[tree.Count-1])
+		{
+			if(node.GetIndex() == plan[0].GetIndex())
+			{
+				leafs.Add(node);
+			}
+		}
+
+		for(int i = tree.Count-1; i > 0; i--)
+		{
+			foreach(TreeNode node in tree[i-1])
+			{
+				//Debug.Log ("node in tree-1: " + node.GetActionName());
+				//Debug.Log(HasChild(tree[i], node));
+				if(HasChild(tree[i], node) == false) //has no childs == is a leaf
 				{
-					leafs.Add(new TreeNode(position, planStep.getName(), leafs[i], treeIndex));
-					leafs.Remove(leafs[i]);
-						
-				}else if (planStep.getParent().getName() == leafs[i].GetParent().GetActionName() && leafs[i].GetParent().GetIndex() == treeIndex)
-				{
-					leafs.Add(new TreeNode(position, planStep.getName(), leafs[i].GetParent(), treeIndex));
+					leafs.Add(node);
 				}
 			}
 		}
-		
-		
-		//--------------------------
-			List<TreeNode> haha = new List<TreeNode>();
-			haha.Add(new TreeNode(new Vector3(),"level1", root, 1));
-			haha.Add(new TreeNode(new Vector3(),"level2", haha[0], 1));
-			haha.Add(new TreeNode(new Vector3(),"level2", haha[0], 1));
-			haha.RemoveAt(0);
-			haha.Add(new TreeNode(new Vector3(),"level3", haha[0], 1));
-			haha.Add(new TreeNode(new Vector3(),"level3", haha[0], 1));
-			haha.Add(new TreeNode(new Vector3(),"level3", haha[1], 1));
-			haha.Add(new TreeNode(new Vector3(),"level3", haha[1], 1));
-			haha.RemoveAt(0);
-			haha.RemoveAt(0);
-		
-		//--------------------------
-		
-		Debug.Log("Print tree: ");
-		PrintTree(leafs);
-		Debug.Log("Tree completed: ");
+		PrintLeafs();
 	}
 	
-	public void PrintTree(List<TreeNode> level)
+	
+	public void PrintLeafs()
 	{
-		bool reachedRoot = true;
-		string currentLevel = "";
-		List<TreeNode> parents = new List<TreeNode>();
-		
-		
-		foreach(TreeNode node in level)
+		string leafString = "--Printing leafs!-- ";
+		foreach(TreeNode node in leafs)
 		{
-			currentLevel += node.GetActionName();
-			if(node.GetParent() != null)
-			{
-				currentLevel += "(" + node.GetParent().GetActionName() + ") ";
-				if(!parents.Contains(node.GetParent()))
-				{
-					parents.Add(node.GetParent());
-				}
-				reachedRoot = false;
-			}
+			leafString += node.GetActionName() + " "; 	
 		}
+		Debug.Log(leafString);
+	}
+	
+	public void PrintTree()
+	{
 		
-		if(reachedRoot == false)
+		
+		/*List<TreeNode> tempList = new List<TreeNode> ();
+		tempList.Add (new TreeNode(new Vector3(),"level1", root, 1));
+		tree.Insert(0, tempList);
+		
+		tempList = new List<TreeNode> ();
+		tempList.Add (new TreeNode(new Vector3(),"level2", root, 1));
+		tempList.Add (new TreeNode(new Vector3(),"level2", root, 1));
+		tree.Insert(1, tempList);
+		
+		tempList = new List<TreeNode> ();
+		tempList.Add (new TreeNode(new Vector3(),"level3", root, 1));
+		tempList.Add (new TreeNode(new Vector3(),"level3", root, 1));
+		tempList.Add (new TreeNode(new Vector3(),"level3", root, 1));
+		tree.Insert(2, tempList);*/
+		
+		//PrintLevel(leafs);
+		Debug.Log("*************Tree**************");
+		Debug.Log ("------Tree Count: " + tree.Count + "-------");
+		
+		foreach(List<TreeNode> treelevel in tree )
 		{
-			Debug.Log ("Number of nodes in level: " + level.Count + ": " + currentLevel);
-			PrintTree(parents);
-		}	
+			
+			string currentLevel = "";
+			foreach(TreeNode levelNode in treelevel)
+			{
+				
+				currentLevel += levelNode.GetActionName() + " "; 
+			}
+			
+			Debug.Log(currentLevel);
+		}
+		PrintLeafs();
+		Debug.Log("*******************************");
+		
 	}
 
 	
 	public string GetActionForAgent(Agent agent) //Traverse the leafs of the tree to find a suitable task for this agent
 	{
+		
+		//Check if the agent already has a node as its own
+		foreach(TreeNode leaf in leafs)
+		{
+			if(leaf.GetOwner() != null && leaf.GetOwner().getAgentNumber() == agent.getAgentNumber())
+			{
+				return leaf.GetActionName();
+			} 
+		}/*else if(leaf.GetOwner() != null) {
+				
+				bool okToAssist = false;
+				List<Agent> assisters = leaf.GetAssisters();
+				foreach(Agent assister in assisters)
+				{
+					if(assister.getAgentNumber() == agent.getAgentNumber()) 
+					{
+						okToAssist = true;
+					}
+				}
+				
+				if(okToAssist)
+				{
+					leaf.GetAssisters().Add(agent);
+					//Debug.Log("AGNETSTHATDOACVTION " + agents[0] + " " + agents[1] + " for action " + leaf.GetActionName());
+					return "AssistingAction";
+				}
+			}
+		}*/
+
 		foreach(TreeNode leaf in leafs)
 		{
 			List<string> agents = ActionManager.Instance.AgentsThatDoAction(agent.getAgentType(), leaf.GetActionName());
@@ -148,34 +215,75 @@ public class TaskTree : MonoBehaviour {
 	}
 	
 	//Removes a node in the leafs that this agent owns and adds its parent 
-	public void RemoveNode(System.Guid agent)
+	public void RemoveNode(Agent agent)
 	{
-		TreeNode ownedNode = GetOwnedNode(agent);
+		
+		TreeNode ownedNode = GetOwnedNode(agent.getAgentNumber());
 		List<Agent> assisters = ownedNode.GetAssisters();
+		
+		//TODO: Kontrollera så att detta verkligen itne behövs
 		foreach(Agent assister in assisters)
 		{
 			assister.GetPlan()[0] = "Idle";
 			Destroy(assister.transform.FindChild("Subsystem").gameObject);
 		}
 		leafs.Remove(ownedNode);
-		if(ownedNode.GetParent() != null && ownedNode.GetParent() != root && CheckForChildren(ownedNode.GetParent()) == false)
+		
+		if(ownedNode.GetActionName() != "")
 		{
+			Debug.Log("____________ node removed: " + ownedNode.GetActionName() + "(" + ownedNode.GetIndex() + ")");
+		}
+		
+		int level = -1;
+		foreach(List<TreeNode> list in tree)
+		{
+			level++;
+			if(list.Contains(ownedNode))
+			{
+				list.Remove(ownedNode);
+				break;
+			}
+		}
+
+		
+		if(ownedNode.GetParent() != null && HasChild(tree[level], ownedNode.GetParent()) == false )
+		{
+			
 			leafs.Add(ownedNode.GetParent());
-			PrintTree(leafs);
-		}	
+			ownedNode.GetParent().SetOwner(agent); //TODO: fixa så att även assisters sätts som ägare direkt
+			
+
+			Debug.Log ("*********************Agent som har fått parent: " + agent.getAgentNumber());
+			
+			Debug.Log("____________ node added: " + ownedNode.GetParent().GetActionName() + "(" + ownedNode.GetParent().GetIndex() + ")");
+			PrintTree();
+				
+			string currentLevel = "";
+			foreach(TreeNode node in leafs)
+			{
+				currentLevel += node.GetActionName() +  " ";
+			}
+			//Debug.Log("leafs -----------------------------> " + currentLevel);
+		}
+		
 	}
 	
 	//Checks if this node is a parent to one or more of the leafs
-	public bool CheckForChildren(TreeNode node)
+	public bool HasChild(List<TreeNode> level, TreeNode searchNode)
 	{
-		foreach(TreeNode leaf in leafs)
+		foreach(TreeNode node in level)
 		{
-			if(leaf.GetParent().Equals(node))
+			//Debug.Log ("node tree: " + node.GetActionName() + "(" + node.GetParent().GetActionName() + ")");
+			if(node.GetParent() == searchNode /*&& node.GetParent().GetIndex() == searchNode.GetIndex()*/)
 			{
 				return true;
 			}
-		}
+		}	
 		return false;
 	}
 	
+	public List<TreeNode> GetLeafs()
+	{
+		return leafs;
+	}
 }

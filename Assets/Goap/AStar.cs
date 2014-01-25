@@ -22,10 +22,8 @@ public class AStar {
 		//Specialfall för första noden eftersom den INTE är något action utan en postCondition, räknar med att den aldrig kommer va mål!!!
 		List<AStarNode> neighbourList = currentNode.getNeighbours(true); //ger lista med actions som har startNodes preCondition 	
 		
-		
 		foreach(AStarNode node in neighbourList)
 		{
-
 			node.setF(ActionManager.Instance.getAction(node.getName()).cost + HeuristicCost(node, endNode));
 			node.setParent(startNode);
 			openList.Add(node); //Lägg till grannarna för start i openList
@@ -56,10 +54,25 @@ public class AStar {
 				return CreatePath(currentNode, startNode);
 			}
 			
+			bool containsPreWithAmount = false;
 			
+			if( ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties().Count == 1){
+				/*foreach(KeyValuePair<string, WorldStateValue> pair in ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties()){
 				
-			//if multiple preconditions or multiple amounts of the same condition
-			if(ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties().Count > 1 || ActionManager.Instance.getAction(currentNode.getName()).preConditions.containsAmount())
+						if((int)pair.Value.propertyValues["amount"] > 1){
+						
+							containsPreWithAmount = true;
+						}
+				
+				}*/
+				
+				containsPreWithAmount = ActionManager.Instance.getAction(currentNode.getName()).preConditions.containsAmount();
+	
+				
+			}
+				
+			//if multiple preconditions
+			if(ActionManager.Instance.getAction(currentNode.getName()).preConditions.getProperties().Count > 1 || containsPreWithAmount)
 			{
 				List<List<AStarNode>> lists = new List<List<AStarNode>>();
 				
@@ -78,11 +91,12 @@ public class AStar {
 						tempNode.setWorldState(tempWorldState);
 						
 						List<AStarNode> tempList = new List<AStarNode>();
-						//List<AStarNode> test = astar2.Run(tempNode, endNode);
-						//test.Reverse();
+						
 						tempList.AddRange(astar2.Run(tempNode, endNode));
 						
 						tempList[tempList.Count-1].setParent(currentNode); //nyligen tillagd 
+						
+						//Debug.Log(".................." + tempList[0].getName() + " får parent " + currentNode.getName());
 						
 						if(tempList.Count > 0)
 						{
@@ -98,12 +112,11 @@ public class AStar {
 					}
 				}
 				
-				//Sorts by cost to make the plan prioritize actions with small costs
+				//Sort by cost to make the plan prioritize actions with small costs
 				lists.Sort((a, b) => ActionManager.Instance.getAction(a[0].getName()).cost.CompareTo(ActionManager.Instance.getAction(b[0].getName()).cost));
 				
 				foreach(List<AStarNode> list in lists)
 				{
-					//add to final path
 					pathList.AddRange(list);
 				}
 				return CreatePath(currentNode, startNode);
@@ -114,6 +127,7 @@ public class AStar {
 			//Debug.Log ("antal grannar: " + neighbourList.Count);
 			for(int i = 0; i < neighbourList.Count; i++)
 			{
+				//Debug.Log ("***********CurretnNode: " + currentNode.getName() + " neigbour " + neighbourList[i].getName());
 				AStarNode currentNeighbour = neighbourList[i];
 				if(closedList.Contains(currentNeighbour))
 				{
