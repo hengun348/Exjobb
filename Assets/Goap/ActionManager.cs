@@ -101,7 +101,7 @@ public class ActionManager /*: MonoBehaviour*/{
 			Debug.Log ("------------------------------>GetGoal()" + toBuild);
 			return new WorldState(toBuild + "IsBuilt", new WorldStateValue(true));
 		}*/
-		Debug.Log ("------------------------------>GetGoal()" + key);
+		//Debug.Log ("------------------------------>GetGoal() = " + key);
 		return new WorldState(key, val);
 	}
 	
@@ -154,7 +154,7 @@ public class ActionManager /*: MonoBehaviour*/{
 	}
 	
 	
-	public List<string> AgentsThatDoAction(string agent, string actionName)
+	public List<string> AssistingAgentsToAction(string agent, string actionName)
 	{
 		
 		Action action = getAction(actionName);
@@ -188,5 +188,38 @@ public class ActionManager /*: MonoBehaviour*/{
 		
 		//return list with size 0 if cant do action 
 		return returnAgents;
+	}
+	
+	public List<List<string>> AgentsThatDoAction(string actionName) //Returns lists of agents that can do an action
+	{
+		Action action = getAction(actionName);
+		List<string> agents = action.GetAgentTypes();
+		List<List<string>> returnAgents = new List<List<string>>();
+		
+			foreach(string str in agents){
+				if(str.Contains("&"))
+				{
+					List<string> tempList = new List<string>();
+					string[] temp = str.Split('&'); 
+					
+						foreach(string tempAgent in temp ){
+
+							tempList.Add (tempAgent);
+							
+						}
+					returnAgents.Add(tempList);
+				} else {
+					List<string> temp2 = new List<string>();
+					temp2.Add (str);
+					returnAgents.Add(temp2);
+				}
+			}	
+		
+		return returnAgents;
+	}
+	
+	public int NumberOfActions()
+	{
+		return actionsList.Count;
 	}
 }

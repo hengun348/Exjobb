@@ -46,12 +46,15 @@ public class TaskTree : MonoBehaviour{
 			//Debug.Log("lägger till " + planStep.GetActionName() + " som har parent: " + planStep.GetParent().GetActionName());
 			
 		}
-
+		
+		Debug.Log("-------- Lägger till löv----------");
+		
 		//add leafs
 		foreach(TreeNode node in tree[tree.Count-1])
 		{
 			if(node.GetIndex() == plan[0].GetIndex())
 			{
+				Debug.Log("+1 ett löv");
 				leafs.Add(node);
 			}
 		}
@@ -64,22 +67,37 @@ public class TaskTree : MonoBehaviour{
 				//Debug.Log(HasChild(tree[i], node));
 				if(HasChild(tree[i], node) == false) //has no childs == is a leaf
 				{
+					Debug.Log("+1 ett löv");
 					leafs.Add(node);
 				}
 			}
 		}
-		PrintLeafs();
+		//PrintLeafs();
+		
+		PrintTree();
 	}
 	
 	
 	public void PrintLeafs()
 	{
-		string leafString = "--Printing leafs!-- ";
+		
+		string temp = "-----------LÖV: ";
+		
 		foreach(TreeNode node in leafs)
 		{
-			leafString += node.GetActionName() + " "; 	
+			temp += node.GetActionName() + " "/*+ " owner = " + node.GetOwner().getAgentType() + " assister = "*/; 	
+			
+			/*foreach(Agent assister in node.GetAssisters())
+			{
+				temp += "" + assister.getAgentType();
+			}*/
+			
+			
 		}
-		Debug.Log(leafString);
+		Debug.Log (temp);
+		
+		
+		
 	}
 	
 	public void PrintTree()
@@ -129,34 +147,25 @@ public class TaskTree : MonoBehaviour{
 		//Check if the agent already has a node as its own
 		foreach(TreeNode leaf in leafs)
 		{
-			if(leaf.GetOwner() != null && leaf.GetOwner().getAgentNumber() == agent.getAgentNumber())
+			if(leaf.GetOwner() != null && leaf.GetOwner().getAgentNumber() == agent.getAgentNumber()) //if agent already owns a node
 			{
 				return leaf.GetActionName();
 			} 
-		}/*else if(leaf.GetOwner() != null) {
+			else if(leaf.GetOwner() != null) { //if an agent already is assisting on a node
 				
-				bool okToAssist = false;
-				List<Agent> assisters = leaf.GetAssisters();
-				foreach(Agent assister in assisters)
-				{
-					if(assister.getAgentNumber() == agent.getAgentNumber()) 
-					{
-						okToAssist = true;
-					}
-				}
 				
-				if(okToAssist)
+				
+				if(OkayToAssist(agent, leaf, 2))
 				{
-					leaf.GetAssisters().Add(agent);
 					//Debug.Log("AGNETSTHATDOACVTION " + agents[0] + " " + agents[1] + " for action " + leaf.GetActionName());
 					return "AssistingAction";
 				}
 			}
-		}*/
+		}
 
 		foreach(TreeNode leaf in leafs)
 		{
-			List<string> agents = ActionManager.Instance.AgentsThatDoAction(agent.getAgentType(), leaf.GetActionName());
+			List<string> agents = ActionManager.Instance.AssistingAgentsToAction(agent.getAgentType(), leaf.GetActionName());
 			
 			if(agents.Count > 0 && leaf.GetOwnerNumber() == System.Guid.Empty )
 			{
@@ -165,17 +174,8 @@ public class TaskTree : MonoBehaviour{
 			}
 			else if(agents.Count > 1 && leaf.GetOwnerNumber() != System.Guid.Empty && agent.getAgentType() != leaf.GetOwner().getAgentType())
 			{
-				bool okToAssist = true;
-				List<Agent> assisters = leaf.GetAssisters();
-				foreach(Agent assister in assisters)
-				{
-					if(assister.getAgentType() == agent.getAgentType()) 
-					{
-						okToAssist = false;
-					}
-				}
 				
-				if(okToAssist)
+				if(OkayToAssist(agent, leaf, 1))
 				{
 					leaf.GetAssisters().Add(agent);
 					//Debug.Log("AGNETSTHATDOACVTION " + agents[0] + " " + agents[1] + " for action " + leaf.GetActionName());
@@ -185,7 +185,7 @@ public class TaskTree : MonoBehaviour{
 		}
 			
 
-		return "Idle"; //empty string means no match, agent cant to any of the leaf-node-actions 
+		return "IdleAction"; //empty string means no match, agent cant to any of the leaf-node-actions 
 	}
 	
 	//returns node that agent owns in the leafs
@@ -220,19 +220,8 @@ public class TaskTree : MonoBehaviour{
 		
 		TreeNode ownedNode = GetOwnedNode(agent.getAgentNumber());
 		List<Agent> assisters = ownedNode.GetAssisters();
-		
-		//TODO: Kontrollera så att detta verkligen itne behövs
-		foreach(Agent assister in assisters)
-		{
-			assister.GetPlan()[0] = "Idle";
-			Destroy(assister.transform.FindChild("Subsystem").gameObject);
-		}
 		leafs.Remove(ownedNode);
 		
-		if(ownedNode.GetActionName() != "")
-		{
-			Debug.Log("____________ node removed: " + ownedNode.GetActionName() + "(" + ownedNode.GetIndex() + ")");
-		}
 		
 		int level = -1;
 		foreach(List<TreeNode> list in tree)
@@ -244,28 +233,67 @@ public class TaskTree : MonoBehaviour{
 				break;
 			}
 		}
-
 		
-		if(ownedNode.GetParent() != null && HasChild(tree[level], ownedNode.GetParent()) == false )
+		//Debug.Log (agent.getAgentType());
+		//Debug.Log(ownedNode.GetParent().GetActionName());
+		if(ownedNode.GetParent() != null)
 		{
-			
-			leafs.Add(ownedNode.GetParent());
-			ownedNode.GetParent().SetOwner(agent); //TODO: fixa så att även assisters sätts som ägare direkt
-			
-
-			Debug.Log ("*********************Agent som har fått parent: " + agent.getAgentNumber());
-			
-			Debug.Log("____________ node added: " + ownedNode.GetParent().GetActionName() + "(" + ownedNode.GetParent().GetIndex() + ")");
-			PrintTree();
-				
-			string currentLevel = "";
-			foreach(TreeNode node in leafs)
+			List<string> agents = ActionManager.Instance.AssistingAgentsToAction(agent.getAgentType(), ownedNode.GetParent().GetActionName());
+			assisters = ownedNode.GetParent().GetAssisters();
+		
+		
+			if(HasChild(tree[level], ownedNode.GetParent()) == false )
 			{
-				currentLevel += node.GetActionName() +  " ";
+				
+				int nrAgentToDoAction = agents.FindAll(item => item == agent.getAgentType()).Count;
+				int nrSameColorAssisters = 0;
+				
+				foreach(Agent assister in assisters)
+				{
+					if(assister.getAgentType() == agent.getAgentType())
+					{
+						nrSameColorAssisters++;
+					}
+				}
+				
+				leafs.Add(ownedNode.GetParent());
+				
+				
+				if(nrAgentToDoAction - nrSameColorAssisters == 1)
+				{
+				
+					ownedNode.GetParent().SetOwner(agent);
+				
+				} else {
+				
+					foreach(Agent assister in assisters)
+					{
+						if(assister.getAgentType() == agent.getAgentType())
+						{
+							ownedNode.GetParent().SetOwner(assister);
+							assisters.Remove(assister);
+							break;
+						}
+					}
+				}
+				
+				//PrintLeafs();
+				
+			} else if (HasChild(tree[level], ownedNode.GetParent()) == true)
+			{
+				if(agents.Contains(agent.getAgentType()))
+				{
+					if(OkayToAssist(agent,  ownedNode.GetParent(), 1))
+					{
+						ownedNode.GetParent().GetAssisters().Add(agent);
+					}
+				}
 			}
-			//Debug.Log("leafs -----------------------------> " + currentLevel);
 		}
 		
+		Debug.Log ("!!!!!!!!!!!Remove node!!!!!!!!!!!!!");
+		
+		//PrintTree();
 	}
 	
 	//Checks if this node is a parent to one or more of the leafs
@@ -286,4 +314,49 @@ public class TaskTree : MonoBehaviour{
 	{
 		return leafs;
 	}
+	
+	public bool OkayToAssist(Agent agent, TreeNode ownedNode, int mode)
+	{
+		bool okToAssist;
+		
+		if(mode == 1)
+		{
+			okToAssist = true;
+		} else {
+		
+			okToAssist = false;
+		}
+		
+		List <Agent> assisters = ownedNode.GetAssisters();
+				
+			foreach(Agent assister in assisters)
+			{
+				if(mode == 1 && assister.getAgentType() == agent.getAgentType()) 
+				{
+					okToAssist = false;
+				} else if(mode == 2 && assister.getAgentNumber() == agent.getAgentNumber()) 
+				{
+					okToAssist = true;
+				}
+			}
+		
+		return okToAssist;
+				
+	}
+	
+	public void RemoveAgentFromOwnedNode(Agent agent)
+	{
+		TreeNode ownedNode = GetOwnedNode(agent.getAgentNumber());
+		if(ownedNode.GetPosition() != new Vector3(30, 0.5f, 30))
+		{
+			if(ownedNode.GetOwner().getAgentNumber() == agent.getAgentNumber())
+			{
+				ownedNode.SetOwner(null);
+			} else {
+			
+				ownedNode.GetAssisters().Remove(agent);
+			}
+		}
+	}
+	
 }

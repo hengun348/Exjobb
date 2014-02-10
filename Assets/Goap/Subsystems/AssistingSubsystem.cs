@@ -33,6 +33,8 @@ public class AssistingSubsystem : MonoBehaviour{
 			
 			if(BlackBoard.Instance.GetTaskTree(clan).GetOwnedNode(agentComponent.getAgentNumber()).GetPosition().Equals(new Vector3(30, 0.5f, 30)))
 			{
+				((AIPath)agentObject.GetComponent("AIPath")).canMove = false;
+				((AIPath)agentObject.GetComponent("AIPath")).canSearch = false;
 				agentComponent.RemoveEnergy();
 				actionIsDone = true;
 			}

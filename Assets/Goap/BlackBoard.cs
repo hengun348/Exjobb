@@ -43,7 +43,13 @@ public class BlackBoard {
 	
 	public void SetFact(string clan, string name, WorkingMemoryValue factValue)
 	{
+		//Debug.Log ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SÄTTER FAKTA!!!!!");
 		tribeFacts[clan].SetFact(name, factValue);
+		
+		if(name == "Agents")
+		{
+			tribeFacts[clan].ChangeNumberAgentsInClan(1);
+		}
 	}
 	
 	public List<WorkingMemoryValue> GetFact(string clan, string name)
@@ -55,6 +61,11 @@ public class BlackBoard {
 	public bool ContainsFact(string clan, string name)
 	{
 		return tribeFacts[clan].ContainsFact(name);
+	}
+	
+	public void ChangeNumberAgentsInClan(string clan, int change)
+	{
+		tribeFacts[clan].ChangeNumberAgentsInClan(change);
 	}
 	
 	/*public bool agentInHelpList(System.Guid agentNumber){
@@ -102,6 +113,11 @@ public class BlackBoard {
 	public void UpdateScore(string clan, string type)
 	{
 		tribeFacts[clan].UpdateScore(clan, type);
+	}
+	
+	public void SetScore(string clan, int score)
+	{
+		tribeFacts[clan].SetScore(score);
 	}
 	
 	public int GetScore(string clan)
@@ -163,7 +179,6 @@ public class BlackBoard {
 		TribeFacts fact = new TribeFacts(clanColor, new TaskTree());
 		tribeFacts.Add(clan, fact);
 		SetCurrentWorldstate();
-		Debug.Log ("******************CLAN ASSIGNED" + clan);
 		return clan;
 	}
 	
@@ -173,4 +188,78 @@ public class BlackBoard {
 		return clans;
 	}
 	
+	public void RemoveAgentFromOwnedNode(string clan, Agent agent)
+	{
+		tribeFacts[clan].RemoveAgentFromOwnedNode(agent);
+	}
+	
+	private static int Compare(int x, int y)
+	{
+		if (x == y)
+            return 0;
+        else if (x > y)
+            return -1;
+        else
+            return 1;
+	}
+	
+	public List<string> SortClanScores()
+	{
+		
+		List<int> scores = new List<int>();
+		
+		List<string> returnClans = new List<string>();
+		
+		foreach(string clan in clans)
+		{
+			scores.Add (BlackBoard.Instance.GetScore(clan));
+		}
+		
+		scores.Sort(Compare);
+		
+		foreach(int score in scores)
+		{
+			foreach(string clan in clans)
+			{
+				if(score == BlackBoard.Instance.GetScore(clan))
+				{
+					returnClans.Add(clan);	
+				}
+			}
+		}
+		
+		return returnClans;
+		
+	}
+	
+	public void IncreasePopulationCap(string clan)
+	{
+		tribeFacts[clan].IncreasePopulationCap();
+	}	
+	
+	public int GetPopulationCap(string clan)
+	{
+		return tribeFacts[clan].GetPopulationCap();
+	}
+	
+	public int GetAgentsInClan(string clan)
+	{
+		return tribeFacts[clan].GetAgentsInClan();
+	}
+	
+	public void AddColorToClan(string clan, string color)
+	{
+		tribeFacts[clan].AddColorToClan(color);
+		
+	}
+	
+	public void RemoveColorFromClan(string clan, string color)
+	{
+		tribeFacts[clan].RemoveColorFromClan(color);
+	}
+	
+	public List<string> GetColorsInClan(string clan)
+	{
+		return tribeFacts[clan].GetColorsInClan();
+	}
 }

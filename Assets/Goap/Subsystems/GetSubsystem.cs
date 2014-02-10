@@ -11,18 +11,25 @@ public class GetSubsystem: MonoBehaviour{
 	List<string> facts;
 	string clan;
 	WalkSubsystem walker;
+	AudioClip[] getSounds;
+	//AudioSource getSound;
 	
 	void Awake(){
 		agentObject = gameObject.transform.parent.gameObject;
 		agentComponent = (Agent)agentObject.GetComponent("Agent");
 		facts = agentComponent.GetSubsystemFacts();
 		clan = agentComponent.GetClan();
+
+		getSounds = new AudioClip[2];
+		getSounds[0] = (AudioClip)Resources.Load ("SFX/misc040");
+		getSounds[1] = (AudioClip)Resources.Load ("SFX/misc002");
+		
 	}
 	
 	IEnumerator Start(){
 		walker = (WalkSubsystem)gameObject.GetComponent("WalkSubsystem");
 		moveToPosition = new Vector3(Random.Range(agentObject.transform.position.x - 20.0f, agentObject.transform.position.x + 20.0f), 0, Random.Range(agentObject.transform.position.z - 20.0f, agentObject.transform.position.z + 20.0f));
-
+		
 		collected = false;
 		actionIsDone = false;
 		yield return StartCoroutine(FindResource());
@@ -38,9 +45,14 @@ public class GetSubsystem: MonoBehaviour{
 				
 				if(walker.hasArrived == true)
 				{
+					Debug.Log("*DELIVERED-" + facts[1] + "*");
+					
+					AudioSource.PlayClipAtPoint(getSounds[1], housePosition, 0.5f);
+					BlackBoard.Instance.GetTaskTree(clan).RemoveNode(agentComponent);
+				
 					collected = false;
 					actionIsDone = true;
-					Debug.Log("*DELIVERED-" + facts[1] + "*");
+					
 					agentComponent.SetSkillpoints("collect");
 					agentComponent.RemoveEnergy();
 				}
@@ -55,8 +67,10 @@ public class GetSubsystem: MonoBehaviour{
 					
 					if(walker.hasArrived == true)
 					{
-						collected = true;
 						Debug.Log("*GOT-" + facts[1] + "*");
+						AudioSource.PlayClipAtPoint(getSounds[0], moveToPosition, 0.75f);
+
+						collected = true;
 					}
 					
 				} else

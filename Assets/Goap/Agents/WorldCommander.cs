@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[AddComponentMenu("Commanders/WorldCommander")]
+
 public class WorldCommander: MonoBehaviour
 {
 	void Start()
@@ -92,6 +94,7 @@ public class WorldCommander: MonoBehaviour
 			else
 			{
 				clan.name = BlackBoard.Instance.GetClan();
+				BlackBoard.Instance.SetScore(clan.name, 200);
 				clan.transform.position = new Vector3(20 + Random.Range(-5, 5), 0.25f, 20 + Random.Range(-5, 5));
 			}
 			

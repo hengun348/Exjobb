@@ -25,7 +25,7 @@ public class WorkingMemory {
 		}
 		
 		//Check if it is a globaly important fact that everyone needs to know about, then send it to the blackboard
-		if(name == "Red" || name == "Blue" || name == "Yellow" || name == "Buildings" || name == "Orange"){
+		if(name == "Red" || name == "Blue" || name == "Yellow" || name == "Buildings" || name == "Orange" || name == "Green" || name == "Magenta"){
 			blackBoard.SetFact(clan, name, factValue);
 		}
 	}

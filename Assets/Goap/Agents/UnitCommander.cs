@@ -2,29 +2,46 @@
 using System.Collections;
 using System.Collections.Generic;
 
+[AddComponentMenu("Commanders/UnitCommander")]
+
 public class UnitCommander: MonoBehaviour
 {
 	GameObject agentGroup;
 	string clan;
+	bool okToAdd;
 	//List<Agent> agents;
 	
 	void Awake()
 	{
 		//agents = new List<Agent>();
+		okToAdd = false;
 	}
 	
 	void Start()
 	{	
 		agentGroup = new GameObject();	
 		agentGroup.name = "Agents";
-		agentGroup.transform.parent = gameObject.transform.parent.transform.parent;
-		agentGroup.transform.position = new Vector3(0, 1, 0);
+		//agentGroup.transform.parent = gameObject.transform.parent.transform.parent;
+		//agentGroup.transform.position = new Vector3(0, 1, 0);
+		agentGroup.transform.parent = gameObject.transform.parent.parent;
+		agentGroup.transform.position = gameObject.transform.parent.parent.position + new Vector3(0, 0.5f, 0);
+		
+		
+		string color = "";
+		
+		for (int k = 1; k < clan.Length; k++) 
+			{ 
+				if (char.IsUpper(clan[k])) 
+				{ 	
+					color = clan.Substring(0, k-1); 
+					break; 
+				} 
+			}
 		
 		for(int i = 0; i < 2; i++)
 		{
-			AddAgent("Red");
-			AddAgent("Blue");
-			AddAgent("Yellow");
+			//AddAgent(color, agentGroup.transform.position);
+			StartCoroutine(AddAgent(color));
 		}
 	}
 	
@@ -38,21 +55,46 @@ public class UnitCommander: MonoBehaviour
 		UpdateGrid();
 	}
 	
-	void AddAgent(string color)
+	public IEnumerator AddAgent(string color)
 	{
-		GameObject agentObject = new GameObject();
-		agentObject.name = "AgentObject";
-		agentObject.transform.parent = agentGroup.transform;
-		Agent prefab = (Agent)Instantiate(Resources.Load(("Prefabs/Agent"),typeof(Agent)));
-		prefab.transform.position = new Vector3(Random.Range(gameObject.transform.position.x -10, gameObject.transform.position.x + 10), 1.0f, Random.Range(gameObject.transform.position.z - 10, gameObject.transform.position.z + 10));
-		prefab.transform.parent = agentObject.transform;
-		prefab.renderer.material.color = BlackBoard.Instance.GetColorForObject(color);
-		prefab.tag = "Citizen";
-		prefab.name = color;
-		prefab.SetClan(clan);
-		BlackBoard.Instance.UpdateScore(clan, prefab.name + " " + prefab.tag);
-		
-		BlackBoard.Instance.SetFact(clan, "Agents", new WorkingMemoryValue(prefab));
+		Debug.Log("Nu ska det skapas en ny gubbe");
+		while(okToAdd == false)
+		{
+			if(GameObject.Find(clan).transform.FindChild("Buildings") == null)
+			{
+				Debug.Log("Nu finns inte buildings");
+				yield return null;
+			}
+			else
+			{
+				if(((Temple)GameObject.Find(clan).transform.FindChild("Buildings").FindChild("Temple(Clone)").GetComponent("Temple")).IsSacrificing())
+				{
+					//Debug.Log("men det offras tydligen just nu");
+				}
+				else{
+					Debug.Log(GameObject.Find(clan).transform.name);
+					((Temple)GameObject.Find(clan).transform.FindChild("Buildings").FindChild("Temple(Clone)").GetComponent("Temple")).Sacrifice();
+					yield return new WaitForSeconds(1);
+					
+			
+					GameObject agentObject = new GameObject();
+					agentObject.name = "AgentObject";
+					agentObject.transform.parent = agentGroup.transform;
+					Agent prefab = (Agent)Instantiate(Resources.Load(("Prefabs/Agent"),typeof(Agent)));
+					prefab.transform.position = agentGroup.transform.position;
+					prefab.transform.parent = agentObject.transform;
+					prefab.renderer.material.color = BlackBoard.Instance.GetColorForObject(color);
+					prefab.name = color;
+					prefab.SetClan(clan);
+					BlackBoard.Instance.UpdateScore(clan, prefab.name + " " + prefab.tag);
+					
+					BlackBoard.Instance.SetFact(clan, "Agents", new WorkingMemoryValue(prefab));
+					okToAdd = true;
+				}
+			}
+			yield return null;
+		}
+		okToAdd = false;
 	}
 	
 	public List<Agent> GetAgents()
