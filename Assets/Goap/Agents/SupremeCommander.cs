@@ -36,7 +36,7 @@ public class SupremeCommander: MonoBehaviour
 		
 		//Add new agents
 		int slump = Random.Range(0, 100);
-		Debug.Log(BlackBoard.Instance.GetAgentsInClan(clan) + " " + BlackBoard.Instance.GetPopulationCap(clan) + " " + BlackBoard.Instance.GetScore(clan) + " " + slump);
+		//Debug.Log(BlackBoard.Instance.GetAgentsInClan(clan) + " " + BlackBoard.Instance.GetPopulationCap(clan) + " " + BlackBoard.Instance.GetScore(clan) + " " + slump);
 		if( (BlackBoard.Instance.GetAgentsInClan(clan) < BlackBoard.Instance.GetPopulationCap(clan)) && (BlackBoard.Instance.GetScore(clan) > 100) && (slump < 80) )
 		{
 			BlackBoard.Instance.UpdateScore(clan, "Created Agent");
@@ -47,7 +47,6 @@ public class SupremeCommander: MonoBehaviour
 		//Create new buildings
 		if(BlackBoard.Instance.GetTaskTree(clan).GetLeafs().Count == 0)
 		{
-			
 			AddNewGoals();
 		}
 	}
@@ -83,9 +82,7 @@ public class SupremeCommander: MonoBehaviour
 		
 		if(actionName == "Build")
 		{
-		
 			string type = "";
-			
 			int firstUpper = 0;
 			
 			for(int i = 0; i<building.Length-1; i++)
@@ -107,8 +104,6 @@ public class SupremeCommander: MonoBehaviour
 			
 			if( type != "Floor")
 			{
-			
-			
 				List<string> colorsInClan = BlackBoard.Instance.GetColorsInClan(clan);		
 				//Check if action requires several agents then it should check if we got both those agentcolors
 				
@@ -116,8 +111,6 @@ public class SupremeCommander: MonoBehaviour
 				
 				foreach ( List<string> listOfColors in ActionManager.Instance.AgentsThatDoAction(action.GetActionName()))
 				{
-					
-					
 					foreach(string color in listOfColors)
 					{
 						if(!colorsInClan.Contains(color))
@@ -150,12 +143,9 @@ public class SupremeCommander: MonoBehaviour
 						Debug.Log ("NEW GOAL!!!! " + building);
 						buildingCommander.SetGoal(goal);
 				}
-			
 			}
 		}
 
-		
-		
 		//buildingCommander.SetGoal(new WorldState("blackTowerIsBuilt", new WorldStateValue(true)));
 		//buildingCommander.SetGoal(new WorldState("magentaFactoryIsBuilt", new WorldStateValue(true)));
 		//buildingCommander.SetGoal(new WorldState("redHouseIsBuilt", new WorldStateValue(true)));

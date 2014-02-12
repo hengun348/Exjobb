@@ -55,20 +55,17 @@
      <Compile Include="Assets\Goap\Subsystems\PathfindingPlugin\AstarPathfindingEditor\Editor\ModifierEditors\RaycastModifierEditor.cs" />
      <Compile Include="Assets\Goap\Subsystems\PathfindingPlugin\AstarPathfindingEditor\Editor\ModifierEditors\SmoothModifierEditor.cs" />
      <Compile Include="Assets\Goap\Subsystems\PathfindingPlugin\AstarPathfindingEditor\Editor\SeekerEditor.cs" />
-     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Readme_upgrading.txt" />
-     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\link.xml" />
-     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Plugins\dependencies.txt" />
-     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Readme.txt" />
-     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Plugins\JsonFx\Readme.txt" />
+     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\JsonFx\Readme.txt" />
+     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\DotNetZip\License.txt" />
+     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\JsonFx\License.txt" />
      <None Include="Assets\Goap\Subsystems\PathfindingPlugin\AstarPathfindingEditor\Editor\EditorAssets\Materials\Navmesh.shader" />
-     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Plugins\JsonFx\License.txt" />
      <None Include="Assets\Goap\Subsystems\PathfindingPlugin\AstarPathfindingEditor\Editor\EditorAssets\Materials\Navmesh2.shader" />
-     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Plugins\DotNetZip\License.txt" />
+     <None Include="Assets\Goap\Subsystems\PathfindingPlugin\Plugins\dependencies.txt" />
  <Reference Include="Ionic.Zip.Reduced">
- <HintPath>Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Plugins\DotNetZip\Ionic.Zip.Reduced.dll</HintPath>
+ <HintPath>Assets\Goap\Subsystems\PathfindingPlugin\Plugins\DotNetZip\Ionic.Zip.Reduced.dll</HintPath>
  </Reference>
  <Reference Include="JsonFx.Json">
- <HintPath>Assets\Goap\Subsystems\PathfindingPlugin\Plugins\AstarPathfindingProject\Plugins\JsonFx\JsonFx.Json.dll</HintPath>
+ <HintPath>Assets\Goap\Subsystems\PathfindingPlugin\Plugins\JsonFx\JsonFx.Json.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:\Program Files\Unity\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
