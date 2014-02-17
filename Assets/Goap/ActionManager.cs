@@ -2,11 +2,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.IO;
 
 public class ActionManager /*: MonoBehaviour*/{
 	
-	public List<Action> actionsList;
+	public List<Action> actionsList = new List<Action>();
 	private Dictionary<Action, string> actionsSuitableForGoal;
 	private static ActionManager instance;
 	public string currentAgent;
@@ -16,42 +18,15 @@ public class ActionManager /*: MonoBehaviour*/{
 		
 		//Dynamically add all actions
 		
-		DirectoryInfo info = new DirectoryInfo("Assets/Goap/Actions");
-		FileInfo[] fileInfo = info.GetFiles();
-		actionsList = new List<Action>();
-		foreach(FileInfo file in fileInfo)
-		{
-			string filePath = file.ToString();
-			int index = filePath.LastIndexOf(@"\") + 1;
-			string fileName = filePath.Substring(index);
-			fileName = fileName.Substring(0, fileName.Length-3);
-			if(fileName != "Action")
-			{
-				var ci = Type.GetType(fileName).GetConstructor(Type.EmptyTypes);
-				Action myTypeInstance = (Action)ci.Invoke(new object[]{});
-				actionsList.Add(myTypeInstance);
-			}
-			
-			
-		}
-		
+		var type = typeof(Action);
+		var types = AppDomain.CurrentDomain.GetAssemblies()
+			.SelectMany(s => s.GetTypes())
+				.Where(p => type.IsAssignableFrom(p) && p.GetType() != type);
 
-		//All possible actions
-		
-		/*actionsList.Add(new BuildBlueHouseAction());
-		actionsList.Add(new BuildRedHouseAction());
-		actionsList.Add(new BuildPurpleHouseAction());
-		actionsList.Add(new GetBlueAction());
-		actionsList.Add(new GetRedAction());
-		
-		actionsList.Add(new AimAction());
-		actionsList.Add(new ApproachAction());
-		actionsList.Add(new DetonateBombAction());
-		actionsList.Add(new FleeAction());
-		actionsList.Add(new LoadAction());
-		actionsList.Add(new ScoutAction());
-		actionsList.Add(new ShootAction());
-		actionsList.Add(new WalkAction());*/
+		foreach(var actionType in types)
+		{
+			actionsList.Add((Action)Activator.CreateInstance(actionType));
+		}
 	}
 	
 	public static ActionManager Instance
