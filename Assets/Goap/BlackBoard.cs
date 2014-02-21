@@ -43,9 +43,24 @@ public class BlackBoard {
 	
 	public void SetFact(string clan, string name, WorkingMemoryValue factValue)
 	{
-		//Debug.Log ("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!SÄTTER FAKTA!!!!!");
-		tribeFacts[clan].SetFact(name, factValue);
+		bool alreadyKnown = false;
+		foreach(WorkingMemoryValue vm in tribeFacts[clan].GetFact(name))
+		{
+			
+			if(vm.GetFactValue().Equals( factValue.GetFactValue()))
+			{
+				//Already knows about it
+				Debug.Log("Klanen vet redan det här!");
+				alreadyKnown = true;
+				break;
+			}
+		}
 		
+		if(!alreadyKnown)
+		{	
+			tribeFacts[clan].SetFact(name, factValue);
+		}
+
 		if(name == "Agents")
 		{
 			tribeFacts[clan].ChangeNumberAgentsInClan(1);
@@ -54,7 +69,6 @@ public class BlackBoard {
 	
 	public List<WorkingMemoryValue> GetFact(string clan, string name)
 	{
-		//Debug.Log ("******************CLAN" + clan);
 		return tribeFacts[clan].GetFact(name);			
 	}
 	
@@ -126,35 +140,33 @@ public class BlackBoard {
 		return tribeFacts[clan].GetScore();
 	}
 	
-	public void SetCurrentWorldstate()
+	public void SetCurrentWorldstate(string clan,  WorldState ws)
 	{
-		//TODO fixa så att man itne behöver lägga in allt för hand
-		WorldState currentWorldState = new WorldState();
-		currentWorldState.setProperty("enemyVisible", new WorldStateValue(false));
-		currentWorldState.setProperty("armedWithGun", new WorldStateValue(true));
-		currentWorldState.setProperty("weaponLoaded", new WorldStateValue(false));
-		//currentWorldState.setProperty("enemyLinedUp", new WorldStateValue(false));
-		//currentWorldState.setProperty("enemyAlive", new WorldStateValue(true));
-		currentWorldState.setProperty("armedWithBomb", new WorldStateValue(true));
-		//currentWorldState.setProperty("nearEnemy", new WorldStateValue(false));
-		currentWorldState.setProperty("agentAlive", new WorldStateValue(true));
+		WorldState currentWorldState = (WorldState)GetFact(clan, "currentWorldState")[0].GetFactValue();
+		RemoveFact(clan, "currentWorldState", new WorkingMemoryValue(currentWorldState));
 		
-		currentWorldState.setProperty("blueResourceIsAvailable", new WorldStateValue(true));
-		currentWorldState.setProperty("redResourceIsAvailable", new WorldStateValue(true));
-		currentWorldState.setProperty("yellowResourceIsAvailable", new WorldStateValue(true));
+		WorldState tempWorldState = new WorldState ();
 		
-		currentWorldState.setProperty("orangeResourceIsAvailable", new WorldStateValue(false));
-		currentWorldState.setProperty("greenResourceIsAvailable", new WorldStateValue(false));
-		currentWorldState.setProperty("magentaResourceIsAvailable", new WorldStateValue(false));
-		
-		/*currentWorldState.setProperty("redResourceIsCollected", new WorldStateValue(false));
-		currentWorldState.setProperty("blueResourceIsCollected", new WorldStateValue(false));
-		currentWorldState.setProperty("yellowResourceIsCollected", new WorldStateValue(false));*/
-		
-		foreach(string clan in clans)
+		foreach(KeyValuePair<string, WorldStateValue> newState in ws.getProperties())
 		{
-			SetFact(clan, "currentWorldState", new WorkingMemoryValue(currentWorldState));
+		
+			foreach (KeyValuePair<string, WorldStateValue> oldState in currentWorldState.getProperties())
+			{
+				
+				if(oldState.Key == newState.Key)
+				{
+					
+					tempWorldState.setProperty(newState.Key, newState.Value);
+				} else{
+				
+					tempWorldState.setProperty(oldState.Key, oldState.Value);
+				}
+			}
+			
 		}
+		
+
+		SetFact(clan, "currentWorldState", new WorkingMemoryValue(tempWorldState));
 	}
 	
 	//Returns a unique clan name for the supremecommander
@@ -178,7 +190,21 @@ public class BlackBoard {
 		clans.Add(clan);
 		TribeFacts fact = new TribeFacts(clanColor, new TaskTree());
 		tribeFacts.Add(clan, fact);
-		SetCurrentWorldstate();
+		
+		
+		WorldState currentWorldState = new WorldState();
+
+		currentWorldState.setProperty("blueResourceIsAvailable", new WorldStateValue(false));
+		currentWorldState.setProperty("redResourceIsAvailable", new WorldStateValue(false));
+		currentWorldState.setProperty("yellowResourceIsAvailable", new WorldStateValue(false));
+		
+		currentWorldState.setProperty("orangeResourceIsAvailable", new WorldStateValue(false));
+		currentWorldState.setProperty("greenResourceIsAvailable", new WorldStateValue(false));
+		currentWorldState.setProperty("magentaResourceIsAvailable", new WorldStateValue(false));
+		
+		
+		//SetCurrentWorldstate(clan, currentWorldState);
+		SetFact(clan, "currentWorldState", new WorkingMemoryValue(currentWorldState));
 		return clan;
 	}
 	
@@ -261,5 +287,10 @@ public class BlackBoard {
 	public List<string> GetColorsInClan(string clan)
 	{
 		return tribeFacts[clan].GetColorsInClan();
+	}
+	
+	public void RemoveFact(string clan, string factName, WorkingMemoryValue factValue)
+	{
+		tribeFacts[clan].RemoveFact(factName, factValue);
 	}
 }

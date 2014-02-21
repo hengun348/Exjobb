@@ -2,6 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Timers;
+using System;
+using System.IO;
 
 public class Agent: MonoBehaviour
 {
@@ -18,17 +20,16 @@ public class Agent: MonoBehaviour
 	public System.Guid agentNumber;
 	private List<string> subsystemFacts; 
 	
-	public int totalSkillpoints, energy;
+	public int totalSkillpoints;
 	private Dictionary<string, float> skillArray;
 
-	private int tick, unhappyTick;
+	private int tick, unhappyTick, energy;
 	
 	public float Buildskill, Collectskill;
 	
 	public Color agentColor;
 	
-	public string clan;
-	private string mood;
+	private string mood, clan;
 	
 	private bool showPlan;
 	
@@ -68,7 +69,7 @@ public class Agent: MonoBehaviour
 		AddPathfinding();
 		
 		tick = 0;
-		energy = 93;
+		energy = 100;
 
 		mood = "happy";
 		
@@ -77,8 +78,7 @@ public class Agent: MonoBehaviour
 	
 	void Update(){
 		
-		//Set speed of agent depending on its energy
-		//((AIPath)gameObject.GetComponent("AIPath")).speed = 0.1f * energy;
+		
 		
 		if((((showPlan == true && transform.childCount == 3) || (showPlan == false && transform.childCount == 2))  && plan.Count == 1)){
 			//blackBoard.GetTaskTree(clan).RemoveNode(this);
@@ -88,7 +88,7 @@ public class Agent: MonoBehaviour
 				StartCoroutine(((PlanGUI)gameObject.transform.FindChild("PlanGUI").GetComponent("PlanGUI")).FadeTo(0.0f, 1.0f));//fades the gui out	
 				StartCoroutine(((PlanGUI)gameObject.transform.FindChild("PlanGUI").GetComponent("PlanGUI")).FadeTo(1.0f, 1.0f)); // fades the gui in
 			}
-			blackBoard.GetTaskTree(clan).PrintTree();
+			//blackBoard.GetTaskTree(clan).PrintTree();
 			AddSubsystem();
 			
 		}else if(transform.childCount == 2 && plan.Count > 1){
@@ -105,9 +105,8 @@ public class Agent: MonoBehaviour
 	
 		
 		
-		//Collectskill = skillArray["collectSkillpoints"];
-		//Buildskill = skillArray["buildSkillpoints"];
-		
+		Collectskill = skillArray["collectSkillpoints"];
+		Buildskill = skillArray["buildSkillpoints"];
 	}
 	
 	public int GetTick()
@@ -141,34 +140,35 @@ public class Agent: MonoBehaviour
 	
 	private void AddSubsystem() 
 	{ 
-		Debug.Log ("++++++++++++++ LÄGGER TILL SUBSYSTEM " + plan[0]);
+		//Debug.Log ("++++++++++++++ LÄGGER TILL SUBSYSTEM " + plan[0]);
 		subsystemFacts.Clear();
 		string subsystemToLoad = "";
 		GameObject sub = new GameObject("Subsystem"); 
 		sub.transform.position = transform.position; 
 		sub.transform.parent = transform; 
-		/*if(plan[0] == "Idle")
-		{
-			subsystemToLoad = "IdleSubsystem"; 
-		}else{
-			//subsystemToLoad = plan[0].Substring(0, plan[0].Length - 6) + "Subsystem"; 
-			
-		*/	
-			int tempPos = 0;
-			
-			for (int i = 1; i < plan[0].Length; i++) 
-			{ 
-				if (char.IsUpper(plan[0][i])) 
-				{ 	
-					subsystemFacts.Add(plan[0].Substring(tempPos, i-tempPos)); 
-					tempPos = i;
-					//break; 
-				} 
-			}
-			subsystemToLoad = subsystemFacts[0];
-			subsystemToLoad += "Subsystem";
-		//}
-		sub.AddComponent(subsystemToLoad); 
+	
+		int tempPos = 0;
+		
+		for (int i = 1; i < plan[0].Length; i++) 
+		{ 
+			if (char.IsUpper(plan[0][i])) 
+			{ 	
+				subsystemFacts.Add(plan[0].Substring(tempPos, i-tempPos)); 
+				tempPos = i;
+				//break; 
+			} 
+		}
+		subsystemToLoad = subsystemFacts[0];
+		subsystemToLoad += "Subsystem" + clan.Substring(0, clan.Length-5) + "Clan" ;
+		
+		if (!System.IO.File.Exists(subsystemToLoad + ".cs"))
+	    {
+			subsystemToLoad = subsystemFacts[0] + "Subsystem";	
+		}
+		
+		Debug.Log ("********************** Addar subsystem :" + subsystemToLoad);
+		
+		sub.AddComponent(subsystemToLoad);
 		sub.AddComponent("WalkSubsystem"); 
 	}
 		
@@ -205,8 +205,6 @@ public class Agent: MonoBehaviour
 		target = new GameObject("Target");
 		target.transform.parent = gameObject.transform.parent.transform;
 		
-		gameObject.AddComponent("Seeker");
-		gameObject.AddComponent("AIPath");
 		gameObject.AddComponent<LineRenderer>();
 		gameObject.GetComponent<LineRenderer>().SetWidth(0.1f, 0.1f);
 		gameObject.GetComponent<LineRenderer>().material.shader = Shader.Find("Particles/Additive");
@@ -214,11 +212,7 @@ public class Agent: MonoBehaviour
 		gameObject.GetComponent<LineRenderer>().SetColors(new Color(clanColor.r, clanColor.g, clanColor.b, 0), clanColor);
 		gameObject.GetComponent<LineRenderer>().enabled = false;
 		
-		
-		((AIPath)gameObject.GetComponent("AIPath")).canMove = false;
-		((AIPath)gameObject.GetComponent("AIPath")).canSearch = false;
 		((AIPath)gameObject.GetComponent("AIPath")).target = target.transform;
-		((AIPath)gameObject.GetComponent("AIPath")).speed = 10;
 	}
 	
 	private void ActionTookTooLong()
@@ -277,28 +271,37 @@ public class Agent: MonoBehaviour
 		
 	public void CreateNewPlan(WorldState currentWorldState, WorldState goalWorldState)
 	{
-		((AIPath)(gameObject.GetComponent("AIPath"))).canMove = false;
-		((AIPath)(gameObject.GetComponent("AIPath"))).canSearch = false;
 		StopCoroutine(plan[0].Substring(0, plan[0].Length - 6));
 		Destroy(transform.FindChild("Subsystem").gameObject);
 		
 		planner.SetGoalWorldState(goalWorldState);
+		
+		//Saves current plan so that agent can continue after new plan is completed 
 		List<string> tempPlan = new List<string>();
 		foreach(string action in plan)
 		{
 			tempPlan.Add(action);
 		}
 		
-		List<string> newPlan = new List<string>();
+		List<string> newPlanList = new List<string>();
 		foreach (AStarNode node in planner.RunAStar(currentWorldState))
 		{
-			newPlan.Add(node.getName());
+			newPlanList.Add(node.GetName());
 		}
-		
-		plan.Clear();
-		plan.Add ("Crap");
-		plan.InsertRange(1, newPlan);
-		plan.InsertRange(plan.Count, tempPlan);
+			
+		if(newPlanList.Count == 0)
+		{
+			//A new plan could not be made so continue on the old plan
+			//Implement some kind of report up to commanders?
+			Debug.Log("NEW PLAN COULD NOT BE MADE!!");
+		} else 
+		{
+			//A new plan was created, is added in front of old plan 
+			plan.Clear();
+			plan.Add ("Crap"); //Added because remove plan[0] in update
+			plan.InsertRange(1, newPlanList);
+			plan.InsertRange(plan.Count, tempPlan);
+		}
 	}
 	
 	public void SetSkillpoints(string inputSkill)
@@ -366,12 +369,15 @@ public class Agent: MonoBehaviour
 		{
 			if(Vector3.Distance(transform.position, new Vector3(30, 0, 30)) <= 2.0f) //Regenerate energy if at a specific position
 			{
-				if(energy < 96)
+				energy += 5;
+
+				if(energy > 100)
 				{
-					energy += 5;
+					energy = 100;
 				}
+				
 			}else{
-				if(energy > 0)
+				if(energy > 5)
 				{
 					energy -= 1;
 				}
@@ -379,28 +385,56 @@ public class Agent: MonoBehaviour
 			tick = 0;
 		}
 		
-		if(mood == "unhappy")
+		/*if(mood == "unhappy")
 		{
 			unhappyTick++;
 			
-			if(unhappyTick >= 250)
+			if(unhappyTick % 500 == 0)
+			{
+				
+				
+				bool haveABreak = false;
+				
+				if(clan == "Blue Clan")
+				{
+					haveABreak = ((SupremeCommanderBlueClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("SupremeCommanderBlueClan(Clone)").GetComponent("SupremeCommanderBlueClan")).HaveABreak();
+				
+				} else if(clan == "Red Clan")
+				{
+					haveABreak = ((SupremeCommanderRedClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("SupremeCommanderRedClan(Clone)").GetComponent("SupremeCommanderRedClan")).HaveABreak();
+				}
+				else if(clan == "Yellow Clan")
+				{
+					haveABreak = ((SupremeCommanderYellowClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("SupremeCommanderYellowClan(Clone)").GetComponent("SupremeCommanderYellowClan")).HaveABreak();
+				}
+					
+				if(haveABreak)
+				{
+					//create new plan where the agent rests
+					blackBoard.GetTaskTree(clan).RemoveAgentFromOwnedNode(this);
+					Destroy(gameObject.transform.FindChild("Subsystem").gameObject);
+					plan[0] = "RestingAction";
+					AddSubsystem();
+				}
+			}
+			
+			if(unhappyTick >= 2000 && plan[0] != "RestingAction")
 			{
 				Migrate();
 				mood = "happy";
-				energy = 100000; //OBSOBSOBSOBSOBSOBS
+				energy = 100; //TODO: OBSOBSOBSOBSOBSOBS
 				unhappyTick = 0;
 			}
 		} else {
-		
 			unhappyTick = 0;
-		}
+		}*/
 		
-		if(energy < 90 && mood == "happy")
+		if(energy < 20 && mood == "happy")
 		{
-			mood = "unhappy";		
+			mood = "unhappy";
 		}
 		
-		if (energy >= 90 && mood == "unhappy")
+		if (energy >= 20 && mood == "unhappy")
 		{
 			mood = "happy";
 		}
@@ -409,29 +443,50 @@ public class Agent: MonoBehaviour
 	
 	private void Migrate()
 	{
-		//Debug.Log ("!!!!!!!!!!!SMELL YA LATER!!!!!!");
+		Debug.Log ("!!!!!!!!!!!SMELL YA LATER!!!!!!");
 		
+		//Stop counting agent in the current clan
 		blackBoard.ChangeNumberAgentsInClan(clan, -1);
+		
+		//Check the colors of the agents currently in the clan
 		int clanContainsNumberColorAgents = 0;
 		
-		foreach(Agent agent in ((UnitCommander)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("UnitCommander(Clone)").GetComponent("UnitCommander")).GetAgents())
+		
+		List<Agent> agents = new List<Agent>();
+		
+		if(clan == "Blue Clan")
+		{
+		 	agents = ((UnitCommanderBlueClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("UnitCommanderBlueClan(Clone)").GetComponent("UnitCommanderBlueClan")).GetAgents();
+		
+		} else if(clan == "Red Clan")
+		{
+			agents = ((UnitCommanderRedClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("UnitCommanderRedClan(Clone)").GetComponent("UnitCommanderRedClan")).GetAgents();
+			
+		}
+		else if(clan == "Yellow Clan")
+		{
+			agents = ((UnitCommanderYellowClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("UnitCommanderYellowClan(Clone)").GetComponent("UnitCommanderYellowClan")).GetAgents();
+		}
+		
+		foreach(Agent agent in agents)
 		{
 			if(agent.getAgentType() == getAgentType())
 			{
 				clanContainsNumberColorAgents ++;
 			}
 		}
-		
+		//If there are none of that color left, remove it
 		if(clanContainsNumberColorAgents == 1)
 		{
 			blackBoard.RemoveColorFromClan(clan, getAgentType());
 		}
 		
+		
+		//Get the clan to migrate to
 		blackBoard.SortClanScores();
 		List<string> clans = blackBoard.GetClans();
-	
 		
-		
+		//Change the agents clan
 		if(clan == clans[0] && clans.Count > 1)
 		{
 			SetClan(clans[1]);
@@ -440,17 +495,31 @@ public class Agent: MonoBehaviour
 		{
 			SetClan(clans[0]);
 		}
-			
+		//Increase the count in the new clan
 		blackBoard.ChangeNumberAgentsInClan(clan, 1);
+		//Move the agentObject
 		transform.parent.parent = GameObject.Find (clan).transform.FindChild("Agents");
+		//Stop him from whatever thing his currently working on
 		blackBoard.RemoveAgentFromOwnedNode(clan, this);
 		Destroy(gameObject.transform.FindChild("Subsystem").gameObject);
-		plan[0] = "MigrateAction";
-		AddSubsystem();
-	
-		//Tell the commander of the reciving clan that new agents are arriving
-		((BuildingCommander)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("BuildingCommander(Clone)").GetComponent("BuildingCommander")).ImmigratingAgentArriving(name);
-	
+		
+		//Create a migrate plan
+		//plan[0] = "MigrateAction";
+		//AddSubsystem();
+		
+		//Alert the SupremeCommander of the new clan that the agent is coming
+		if(clan == "Blue Clan")
+		{
+			((SupremeCommanderBlueClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("SupremeCommanderBlueClan(Clone)").GetComponent("SupremeCommanderBlueClan")).ImmigratingAgentArriving(this);	
+		
+		} else if(clan == "Red Clan")
+		{
+			((SupremeCommanderRedClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("SupremeCommanderRedClan(Clone)").GetComponent("SupremeCommanderRedClan")).ImmigratingAgentArriving(this);	
+			
+		} else if(clan == "Yellow Clan")
+		{
+			((SupremeCommanderYellowClan)GameObject.Find(clan).transform.FindChild("Commanders").FindChild("SupremeCommanderYellowClan(Clone)").GetComponent("SupremeCommanderYellowClan")).ImmigratingAgentArriving(this);	
+		}
 	}
 	
 	
@@ -536,5 +605,16 @@ public class Agent: MonoBehaviour
 	public void ShowPlan(bool show)
 	{
 		showPlan = show;
+	}
+	
+	public float GetSkill(string skill)
+	{
+		return skillArray[skill];
+	}
+	
+	public int GetEnergy()
+	{
+	
+		return energy;
 	}
 }

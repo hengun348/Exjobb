@@ -47,14 +47,13 @@ public class TaskTree : MonoBehaviour{
 			
 		}
 		
-		Debug.Log("-------- Lägger till löv----------");
+		//Debug.Log("-------- Lägger till löv----------");
 		
 		//add leafs
 		foreach(TreeNode node in tree[tree.Count-1])
 		{
 			if(node.GetIndex() == plan[0].GetIndex())
 			{
-				Debug.Log("+1 ett löv");
 				leafs.Add(node);
 			}
 		}
@@ -67,14 +66,13 @@ public class TaskTree : MonoBehaviour{
 				//Debug.Log(HasChild(tree[i], node));
 				if(HasChild(tree[i], node) == false) //has no childs == is a leaf
 				{
-					Debug.Log("+1 ett löv");
 					leafs.Add(node);
 				}
 			}
 		}
 		//PrintLeafs();
 		
-		PrintTree();
+		//PrintTree();
 	}
 	
 	
@@ -315,6 +313,11 @@ public class TaskTree : MonoBehaviour{
 		return leafs;
 	}
 	
+	public List<List<TreeNode>> GetTree()
+	{
+		return tree;
+	}
+	
 	public bool OkayToAssist(Agent agent, TreeNode ownedNode, int mode)
 	{
 		bool okToAssist;
@@ -358,5 +361,4 @@ public class TaskTree : MonoBehaviour{
 			}
 		}
 	}
-	
 }

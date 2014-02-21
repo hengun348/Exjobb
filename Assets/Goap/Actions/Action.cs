@@ -4,8 +4,8 @@ using System.Collections.Generic;
 
 public class Action {
 	
-	public WorldState preConditions = new WorldState();
-	public WorldState postConditions = new WorldState();
+	public WorldState preConditions;
+	public WorldState postConditions;
 	public float cost;
 	public float time {get; set; }
 	protected string actionName;

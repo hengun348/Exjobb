@@ -80,7 +80,7 @@ public class WorldCommander: MonoBehaviour
 			AstarPath.active.UpdateGraphs(child.collider.bounds);
 		}
 		
-		int noOfClans = 2;
+		int noOfClans = 1;
 		for(int i = 0; i < noOfClans; i++)
 		{
 			//create the clans
@@ -104,11 +104,32 @@ public class WorldCommander: MonoBehaviour
 			commanderGroup.transform.parent = clan.transform;
 			commanderGroup.transform.position = clan.transform.position;
 			
-			//create supremeCommander and place him in the group
-			SupremeCommander prefab2 = (SupremeCommander)Instantiate(Resources.Load(("Prefabs/SupremeCommander"),typeof(SupremeCommander)));
-			prefab2.transform.position = commanderGroup.transform.position;
-			prefab2.transform.parent = commanderGroup.transform;
-			prefab2.SetClan(clan.name);
+			if(clan.name == "Blue Clan")
+			{
+				SupremeCommanderBlueClan prefab2 = (SupremeCommanderBlueClan)Instantiate(Resources.Load(("Prefabs/SupremeCommanderBlueClan"), typeof(SupremeCommanderBlueClan)));
+				
+				prefab2.transform.position = commanderGroup.transform.position;
+				prefab2.transform.parent = commanderGroup.transform;
+				prefab2.SetClan(clan.name);
+			}
+			else if(clan.name == "Red Clan")
+			{
+				SupremeCommanderRedClan prefab2 = (SupremeCommanderRedClan)Instantiate(Resources.Load(("Prefabs/SupremeCommanderRedClan"), typeof(SupremeCommanderRedClan)));
+				
+				prefab2.transform.position = commanderGroup.transform.position;
+				prefab2.transform.parent = commanderGroup.transform;
+				prefab2.SetClan(clan.name);
+			}
+			else if(clan.name == "Yellow Clan")
+			{
+				SupremeCommanderYellowClan prefab2 = (SupremeCommanderYellowClan)Instantiate(Resources.Load(("Prefabs/SupremeCommanderYellowClan"), typeof(SupremeCommanderYellowClan)));
+				
+				prefab2.transform.position = commanderGroup.transform.position;
+				prefab2.transform.parent = commanderGroup.transform;
+				prefab2.SetClan(clan.name);
+			}
+			
+			
 		}		
 	}
 }

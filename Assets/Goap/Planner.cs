@@ -16,13 +16,11 @@ public class Planner{
 	public List<AStarNode> RunAStar(WorldState currentWorldState){
 		
 		
-		
-		
 		AStarNode startNode = new AStarNode();
 		AStarNode endNode = new AStarNode();
 		
-		startNode.setWorldState(goalWorldState);
-		endNode.setWorldState(currentWorldState);
+		startNode.SetWorldState(goalWorldState);
+		endNode.SetWorldState(currentWorldState);
 		
 		AStar star = new AStar();
 			

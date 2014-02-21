@@ -2,13 +2,11 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using System;
-using System.Linq;
-using System.Reflection;
 using System.IO;
 
 public class ActionManager /*: MonoBehaviour*/{
 	
-	public List<Action> actionsList = new List<Action>();
+	public List<Action> actionsList;
 	private Dictionary<Action, string> actionsSuitableForGoal;
 	private static ActionManager instance;
 	public string currentAgent;
@@ -18,14 +16,21 @@ public class ActionManager /*: MonoBehaviour*/{
 		
 		//Dynamically add all actions
 		
-		var type = typeof(Action);
-		var types = AppDomain.CurrentDomain.GetAssemblies()
-			.SelectMany(s => s.GetTypes())
-				.Where(p => type.IsAssignableFrom(p) && p.GetType() != type);
-
-		foreach(var actionType in types)
+		DirectoryInfo info = new DirectoryInfo("Assets/Goap/Actions");
+		FileInfo[] fileInfo = info.GetFiles();
+		actionsList = new List<Action>();
+		foreach(FileInfo file in fileInfo)
 		{
-			actionsList.Add((Action)Activator.CreateInstance(actionType));
+			string filePath = file.ToString();
+			int index = filePath.LastIndexOf(@"\") + 1;
+			string fileName = filePath.Substring(index);
+			fileName = fileName.Substring(0, fileName.Length-3);
+			if(fileName != "Action")
+			{
+				var ci = Type.GetType(fileName).GetConstructor(Type.EmptyTypes);
+				Action myTypeInstance = (Action)ci.Invoke(new object[]{});
+				actionsList.Add(myTypeInstance);
+			}
 		}
 	}
 	
@@ -131,12 +136,10 @@ public class ActionManager /*: MonoBehaviour*/{
 	
 	public List<string> AssistingAgentsToAction(string agent, string actionName)
 	{
-		
 		Action action = getAction(actionName);
 		List<string> agents = action.GetAgentTypes();
 		List<string> returnAgents = new List<string>();
 		
-	
 		//will only contain the agent itself (size 1) if dont need help
 		if(agents.Contains(agent)){
 			returnAgents.Add(agent);
@@ -144,17 +147,15 @@ public class ActionManager /*: MonoBehaviour*/{
 			
 		}else //return a list of agents that need to help current agent with the action, 
 		{
-			
 			foreach(string str in agents){
-				
 				if(str.Contains("&"))
 				{
 					string[] temp = str.Split('&'); 
-					if(Array.IndexOf(temp, agent) != -1){
-						foreach(string tempAgent in temp ){
-
+					if(Array.IndexOf(temp, agent) != -1)
+					{
+						foreach(string tempAgent in temp )
+						{
 							returnAgents.Add (tempAgent);
-							
 						}
 					}
 				}
@@ -171,25 +172,24 @@ public class ActionManager /*: MonoBehaviour*/{
 		List<string> agents = action.GetAgentTypes();
 		List<List<string>> returnAgents = new List<List<string>>();
 		
-			foreach(string str in agents){
-				if(str.Contains("&"))
+		foreach(string str in agents)
+		{
+			if(str.Contains("&"))
+			{
+				List<string> tempList = new List<string>();
+				string[] temp = str.Split('&'); 
+				
+				foreach(string tempAgent in temp )
 				{
-					List<string> tempList = new List<string>();
-					string[] temp = str.Split('&'); 
-					
-						foreach(string tempAgent in temp ){
-
-							tempList.Add (tempAgent);
-							
-						}
-					returnAgents.Add(tempList);
-				} else {
-					List<string> temp2 = new List<string>();
-					temp2.Add (str);
-					returnAgents.Add(temp2);
+					tempList.Add (tempAgent);
 				}
-			}	
-		
+				returnAgents.Add(tempList);
+			} else {
+				List<string> temp2 = new List<string>();
+				temp2.Add (str);
+				returnAgents.Add(temp2);
+			}
+		}	
 		return returnAgents;
 	}
 	

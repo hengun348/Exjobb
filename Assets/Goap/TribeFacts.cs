@@ -215,5 +215,30 @@ public class TribeFacts: MonoBehaviour {
 	{
 		return colorsInClan;
 	}
-
+	
+	public void RemoveFact(string factName, WorkingMemoryValue factValue)
+	{
+		//tempList is needed for 'collection has changed' if we change directly in list
+		List<WorkingMemoryValue> tempList = GetFact(factName);
+		foreach(WorkingMemoryValue wm in GetFact(factName))
+		{
+			if(wm.GetFactValue() == factValue.GetFactValue())
+			{
+				tempList.Remove(wm);
+				break;
+			}
+			else
+			{
+				//Do nothing
+			}
+		}
+		if(tempList.Count == 0)
+		{
+			knownFacts.Remove(factName);
+		}
+		else
+		{
+			knownFacts[factName] = tempList;
+		}
+	}
 }

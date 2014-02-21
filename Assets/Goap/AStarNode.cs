@@ -19,7 +19,7 @@ public class AStarNode {
 		suitableActions = new List<AStarNode>();
 	}
 	
-	public List<AStarNode> getNeighbours(bool  firstTime)
+	public List<AStarNode> GetNeighbours(bool  firstTime)
 	{
 		List<Action> tempList = new List<Action>();
 		WorldState preConditions = new WorldState();
@@ -55,77 +55,77 @@ public class AStarNode {
 		return suitableActions;
 	}
 	
-	public void addNeighbour(AStarNode node)
+	public void AddNeighbour(AStarNode node)
 	{
 		suitableActions.Add(node);
 	}
 	
-	public void setH(float h)
+	public void SetH(float h)
 	{
 		this.h = h;
 	}
 	
-	public void setF(float f)
+	public void SetF(float f)
 	{
 		this.f = f;
 	}
 	
-	public void setG(float g)
+	public void SetG(float g)
 	{
 		this.g = g;
 	}
 	
-	public float getH()
+	public float GetH()
 	{
 		return h;
 	}
 	
-	public float getF()
+	public float GetF()
 	{
 		return f;
 	}
 	
-	public float getG()
+	public float GetG()
 	{
 		return g;
 	}
 	
-	public void setName(string name)
+	public void SetName(string name)
 	{
 		this.name = name;
 	}
 	
-	public void setParent(AStarNode parent)
+	public void SetParent(AStarNode parent)
 	{
 		this.parent = parent;
 	}
 	
-	public void setTime(float time)
+	public void SetTime(float time)
 	{
 		this.time = time;
 	}
 	
-	public string getName()
+	public string GetName()
 	{
 		return name;
 	}
 	
-	public AStarNode getParent()
+	public AStarNode GetParent()
 	{
 		return parent;
 	}
 	
-	public float getTime()
+	public float GetTime()
 	{
 		return time;
 	}
 	
-	public WorldState getWorldState()
+	public WorldState GetWorldState()
 	{
 		return worldState;
 	}
 	
-	public void setWorldState(WorldState worldState)
+	public void SetWorldState(WorldState worldState)
 	{
 		this.worldState = worldState;
 	}
